@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>NoNet GYM</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- tela de login/cadastro -->
+<div id="tela-auth" class="tela ativa">
+  <div class="auth-box">
+    <div class="logo">No<span>Net</span></div>
+    <div class="logo-sub">GYM</div>
+    <p class="slogan">Offline. Focado. Forte.</p>
+
+    <div class="abas-auth">
+      <button class="aba ativa" onclick="trocarAba('login')">Entrar</button>
+      <button class="aba" onclick="trocarAba('cadastro')">Cadastrar</button>
+    </div>
+
+    <!-- formulario de login -->
+    <div id="form-login">
+      <input class="campo" type="email" id="login-email" placeholder="Email">
+      <input class="campo" type="password" id="login-senha" placeholder="Senha">
+      <button class="btn-principal" onclick="fazerLogin()">ENTRAR</button>
+    </div>
+
+    <!-- formulario de cadastro -->
+    <div id="form-cadastro" style="display:none">
+      <input class="campo" type="text" id="cad-nome" placeholder="Nome completo">
+      <input class="campo" type="email" id="cad-email" placeholder="Email">
+      <input class="campo" type="password" id="cad-senha" placeholder="Senha">
+      <div class="linha-dupla">
+        <input class="campo" type="number" id="cad-idade" placeholder="Idade">
+        <select class="campo" id="cad-genero">
+          <option value="" disabled selected>Gênero</option>
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
+          <option value="O">Outro</option>
+        </select>
+      </div>
+      <input class="campo" type="number" id="cad-peso" placeholder="Peso inicial (kg)" step="0.1">
+      <button class="btn-principal" onclick="fazerCadastro()">CRIAR CONTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- app principal (aparece depois do login) -->
+<div id="tela-app" class="tela" style="display:none">
+
+  <!-- pagina dashboard -->
+  <div id="pagina-dashboard" class="pagina ativa">
+    <div class="cabecalho">
+      <div>
+        <div class="saudacao" id="saudacao">OLÁ, ATLETA</div>
+        <div class="data-hoje" id="data-hoje"></div>
+      </div>
+      <div class="avatar" id="avatar" onclick="sair()">?</div>
+    </div>
+    <div class="conteudo">
+      <div class="grid-stats">
+        <div class="card-stat destaque">
+          <div class="stat-label">Treinos</div>
+          <div class="stat-numero" id="total-treinos">0</div>
+        </div>
+        <div class="card-stat">
+          <div class="stat-label">Peso atual</div>
+          <div class="stat-numero" id="peso-atual">—<span style="font-size:16px">kg</span></div>
+        </div>
+        <div class="card-stat">
+          <div class="stat-label">Esta semana</div>
+          <div class="stat-numero" id="treinos-semana">0</div>
+        </div>
+        <div class="card-stat">
+          <div class="stat-label">Sequência</div>
+          <div class="stat-numero" id="sequencia">0🔥</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Frequência semanal</div>
+        <div class="barra-semana" id="barra-semana">
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+          <div class="dia-dot"></div>
+        </div>
+        <div class="labels-semana">
+          <span>SEG</span><span>TER</span><span>QUA</span>
+          <span>QUI</span><span>SEX</span><span>SAB</span><span>DOM</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Último treino</div>
+        <div id="ultimo-treino">Nenhum treino ainda.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pagina exercicios -->
+  <div id="pagina-exercicios" class="pagina" style="display:none">
+    <div class="cabecalho">
+      <div class="titulo-pagina">EXERCÍ<span>CIOS</span></div>
+    </div>
+    <div class="conteudo">
+      <div class="card">
+        <div class="card-titulo">+ Novo exercício</div>
+        <input class="campo" type="text" id="ex-nome" placeholder="Nome do exercício">
+        <div class="linha-tripla">
+          <div>
+            <div class="campo-label">Séries</div>
+            <input class="campo" type="number" id="ex-series" placeholder="3" min="1">
+          </div>
+          <div>
+            <div class="campo-label">Reps</div>
+            <input class="campo" type="number" id="ex-reps" placeholder="10" min="1">
+          </div>
+          <div>
+            <div class="campo-label">Carga (kg)</div>
+            <input class="campo" type="number" id="ex-carga" placeholder="50" step="0.5">
+          </div>
+        </div>
+        <button class="btn-principal" onclick="adicionarExercicio()">ADICIONAR</button>
+      </div>
+
+      <div class="card-titulo" style="padding:0 2px 8px">Hoje — <span id="data-hoje-ex"></span></div>
+      <div id="lista-exercicios-hoje"></div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-titulo">Evolução de carga</div>
+        <input class="campo" type="text" id="filtro-grafico" placeholder="Filtrar exercício..." oninput="atualizarGrafico()" style="margin-bottom:10px">
+        <div class="wrap-grafico"><canvas id="grafico-exercicios"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pagina medidas -->
+  <div id="pagina-medidas" class="pagina" style="display:none">
+    <div class="cabecalho">
+      <div class="titulo-pagina">MEDI<span>DAS</span></div>
+    </div>
+    <div class="conteudo">
+      <div class="card">
+        <div class="card-titulo">Registrar medidas</div>
+        <div class="grid-medidas">
+          <div>
+            <div class="campo-label">Peso (kg)</div>
+            <input class="campo" type="number" id="m-peso" placeholder="75.5" step="0.1">
+          </div>
+          <div>
+            <div class="campo-label">Cintura (cm)</div>
+            <input class="campo" type="number" id="m-cintura" placeholder="82">
+          </div>
+          <div>
+            <div class="campo-label">Abdômen (cm)</div>
+            <input class="campo" type="number" id="m-abdomen" placeholder="88">
+          </div>
+          <div>
+            <div class="campo-label">Peito (cm)</div>
+            <input class="campo" type="number" id="m-peito" placeholder="100">
+          </div>
+          <div>
+            <div class="campo-label">Braço (cm)</div>
+            <input class="campo" type="number" id="m-braco" placeholder="38">
+          </div>
+          <div>
+            <div class="campo-label">Perna (cm)</div>
+            <input class="campo" type="number" id="m-perna" placeholder="58">
+          </div>
+        </div>
+        <button class="btn-principal" onclick="salvarMedidas()" style="margin-top:8px">SALVAR</button>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Evolução do peso</div>
+        <div class="wrap-grafico"><canvas id="grafico-peso"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Último registro</div>
+        <div id="ultimo-registro">Nenhuma medida ainda.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pagina historico -->
+  <div id="pagina-historico" class="pagina" style="display:none">
+    <div class="cabecalho">
+      <div class="titulo-pagina">HISTÓ<span>RICO</span></div>
+    </div>
+    <div class="conteudo">
+      <div id="lista-historico">
+        <div class="estado-vazio">
+          <div class="icone-vazio">📋</div>
+          <div>Nenhum treino ainda.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pagina progresso -->
+  <div id="pagina-progresso" class="pagina" style="display:none">
+    <div class="cabecalho">
+      <div class="titulo-pagina">PROGRES<span>SO</span></div>
+    </div>
+    <div class="conteudo">
+      <div class="grid-prog">
+        <div class="card-prog">
+          <div class="prog-num" id="p-total">0</div>
+          <div class="prog-label">Treinos totais</div>
+        </div>
+        <div class="card-prog">
+          <div class="prog-num" id="p-semana">0</div>
+          <div class="prog-label">Esta semana</div>
+        </div>
+        <div class="card-prog">
+          <div class="prog-num" id="p-sequencia">0🔥</div>
+          <div class="prog-label">Sequência</div>
+        </div>
+        <div class="card-prog">
+          <div class="prog-num" id="p-peso">—</div>
+          <div class="prog-label">Peso kg</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Medidas — evolução</div>
+        <div class="wrap-grafico"><canvas id="grafico-medidas"></canvas></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-titulo">🏆 Conquistas</div>
+        <div id="lista-conquistas"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- barra de navegacao -->
+  <nav class="nav-bar">
+    <button class="nav-item ativo" onclick="irPara('dashboard', this)">
+      <span>🏠</span>Home
+    </button>
+    <button class="nav-item" onclick="irPara('exercicios', this)">
+      <span>🏋️</span>Treino
+    </button>
+    <button class="nav-item" onclick="irPara('medidas', this)">
+      <span>📏</span>Medidas
+    </button>
+    <button class="nav-item" onclick="irPara('historico', this)">
+      <span>📋</span>Histórico
+    </button>
+    <button class="nav-item" onclick="irPara('progresso', this)">
+      <span>📊</span>Progresso
+    </button>
+  </nav>
+</div>
+
+<div id="toast"></div>
+
+<!-- scripts -->
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/exercises.js"></script>
+<script src="js/measures.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

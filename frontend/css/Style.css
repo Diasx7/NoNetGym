@@ -1,0 +1,418 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* variaveis de cor */
+:root {
+  --fundo: #0a0a0a;
+  --superficie: #111111;
+  --card: #1a1a1a;
+  --borda: #2a2a2a;
+  --verde: #e8ff00;
+  --laranja: #ff4d00;
+  --texto: #f0f0f0;
+  --cinza: #666;
+  --erro: #ff3b3b;
+  --sucesso: #00e676;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* telas */
+.tela { min-height: 100vh; }
+
+/* ── AUTH ── */
+#tela-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* texto gigante de fundo so pra enfeitar */
+#tela-auth::before {
+  content: 'NONET';
+  position: absolute;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 220px;
+  color: rgba(232,255,0,0.03);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+.logo span { color: var(--verde); }
+
+.logo-sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--cinza);
+  letter-spacing: 6px;
+  margin-top: -8px;
+}
+
+.slogan {
+  color: var(--cinza);
+  font-size: 13px;
+  margin-bottom: 36px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.abas-auth {
+  display: flex;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.aba {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--cinza);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.aba.ativa { background: var(--verde); color: #000; }
+
+/* campos de input */
+.campo {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--borda);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--texto);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.campo:focus { border-color: var(--verde); }
+.campo::placeholder { color: var(--cinza); }
+
+select.campo { appearance: none; cursor: pointer; }
+
+.linha-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.linha-tripla { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+.campo-label {
+  font-size: 11px;
+  color: var(--cinza);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 6px;
+}
+
+/* botoes */
+.btn-principal {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--verde);
+  color: #000;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+  margin-top: 4px;
+}
+.btn-principal:active { transform: scale(.97); }
+
+.btn-apagar {
+  background: none;
+  border: none;
+  color: var(--erro);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* ── NAV BAR ── */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: #0f0f0f;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  padding: 8px 0 20px;
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--cinza);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color .2s;
+  letter-spacing: .5px;
+}
+.nav-item span { font-size: 20px; }
+.nav-item.ativo { color: var(--verde); }
+
+/* ── CABECALHO ── */
+.cabecalho {
+  padding: 56px 20px 16px;
+  position: sticky;
+  top: 0;
+  background: var(--fundo);
+  z-index: 50;
+  border-bottom: 1px solid var(--borda);
+}
+
+.titulo-pagina {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+}
+.titulo-pagina span { color: var(--verde); }
+
+/* saudacao do dashboard */
+.saudacao {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+.data-hoje { color: var(--cinza); font-size: 13px; }
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--verde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+}
+
+/* cabecalho tem flexbox pra botar avatar do lado */
+.cabecalho > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ── CONTEUDO ── */
+.conteudo {
+  flex: 1;
+  padding: 20px;
+  padding-bottom: 100px;
+  overflow-y: auto;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--borda);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.card-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cinza);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* ── STATS DO DASHBOARD ── */
+.grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+
+.card-stat {
+  background: var(--card);
+  border: 1.5px solid var(--borda);
+  border-radius: 16px;
+  padding: 18px;
+}
+.card-stat.destaque { background: var(--verde); border-color: var(--verde); }
+.card-stat.destaque .stat-label,
+.card-stat.destaque .stat-numero { color: #000; }
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cinza);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.stat-numero {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+/* barra de frequencia semanal */
+.barra-semana { display: flex; gap: 6px; margin-top: 16px; }
+.dia-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--borda);
+  transition: background .3s;
+}
+.dia-dot.feito { background: var(--verde); }
+
+.labels-semana {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.labels-semana span { font-size: 10px; color: var(--cinza); }
+
+/* ── ITEM DE EXERCICIO ── */
+.item-exercicio {
+  background: var(--superficie);
+  border: 1.5px solid var(--borda);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ex-nome { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.ex-detalhe { color: var(--cinza); font-size: 13px; }
+
+.badge-carga {
+  background: var(--verde);
+  color: #000;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── MEDIDAS ── */
+.grid-medidas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── HISTORICO ── */
+.data-historico {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--verde);
+  margin-bottom: 10px;
+}
+
+/* ── PROGRESSO ── */
+.grid-prog { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+.card-prog {
+  background: var(--card);
+  border: 1.5px solid var(--borda);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.prog-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--verde);
+}
+.prog-label {
+  font-size: 11px;
+  color: var(--cinza);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-top: 4px;
+}
+
+/* ── GRAFICO ── */
+.wrap-grafico { position: relative; height: 180px; margin-top: 10px; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--verde);
+  color: #000;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+  z-index: 999;
+  white-space: nowrap;
+}
+#toast.visivel { opacity: 1; }
+
+/* estado vazio */
+.estado-vazio {
+  text-align: center;
+  color: var(--cinza);
+  padding: 40px 0;
+}
+.icone-vazio { font-size: 48px; margin-bottom: 12px; }
+
+/* separador */
+.sep { height: 1px; background: var(--borda); margin: 16px 0; }
+
+/* esconde scrollbar */
+::-webkit-scrollbar { width: 0; }
