@@ -1,5 +1,5 @@
 // endereço do backend
-const API = 'http://localhost:3000/api'
+const API = 'https://nonetgym-production.up.railway.app/api'
 
 // pega o token salvo no localStorage
 function getToken() {
