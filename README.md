@@ -65,4 +65,4 @@ npm start
 
 ---
 
-Feito por [João Pablo](https://github.com/Diasx7)
+
