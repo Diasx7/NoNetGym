@@ -11,39 +11,88 @@
 <body>
 
 <div id="tela-auth">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <div class="auth-logo-icon"><i class="ti ti-barbell"></i></div>
-      <div>
-        <div class="auth-logo-nome">NoNet GYM</div>
-        <div class="auth-logo-sub">Offline. Focado. Forte.</div>
+  <div class="auth-bg">
+    <div class="auth-orb auth-orb1"></div>
+    <div class="auth-orb auth-orb2"></div>
+    <div class="auth-orb auth-orb3"></div>
+    <div class="auth-grid"></div>
+  </div>
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="auth-brand-icon"><i class="ti ti-barbell"></i></div>
+        <div class="auth-brand-texto">
+          <div class="auth-brand-nome">NoNet<span>GYM</span></div>
+          <div class="auth-brand-tag">Offline. Focado. Forte.</div>
+        </div>
+      </div>
+      <div class="auth-tagline">
+        <div class="auth-tagline-linha">Treine mais.</div>
+        <div class="auth-tagline-linha verde">Evolua sempre.</div>
+      </div>
+      <div class="auth-stats-preview">
+        <div class="auth-stat"><div class="auth-stat-val">12k+</div><div class="auth-stat-lbl">Treinos registrados</div></div>
+        <div class="auth-stat-sep"></div>
+        <div class="auth-stat"><div class="auth-stat-val">98%</div><div class="auth-stat-lbl">Satisfação</div></div>
+        <div class="auth-stat-sep"></div>
+        <div class="auth-stat"><div class="auth-stat-val">Free</div><div class="auth-stat-lbl">Para sempre</div></div>
       </div>
     </div>
-    <div id="form-login">
-      <h2>Entrar</h2>
-      <input class="campo" type="email" id="login-email" placeholder="Email">
-      <input class="campo" type="password" id="login-senha" placeholder="Senha">
-      <button class="btn-principal" onclick="fazerLogin()">Entrar</button>
-      <p class="auth-link">Não tem conta? <a onclick="mostrarCadastro()">Cadastrar</a></p>
-    </div>
-    <div id="form-cadastro" style="display:none">
-      <h2>Criar conta</h2>
-      <input class="campo" type="text" id="cad-nome" placeholder="Nome completo">
-      <input class="campo" type="email" id="cad-email" placeholder="Email">
-      <input class="campo" type="password" id="cad-senha" placeholder="Senha">
-      <div class="linha-dupla">
-        <input class="campo" type="number" id="cad-idade" placeholder="Idade">
-        <select class="campo" id="cad-genero">
-          <option value="" disabled selected>Gênero</option>
-          <option value="M">Masculino</option>
-          <option value="F">Feminino</option>
-          <option value="O">Outro</option>
-        </select>
+    <div class="auth-box">
+      <div id="form-login">
+        <div class="auth-form-titulo">Bem-vindo de volta</div>
+        <div class="auth-form-sub">Entre na sua conta para continuar</div>
+        <div class="auth-input-group">
+          <i class="ti ti-mail"></i>
+          <input class="campo" type="email" id="login-email" placeholder="Email">
+        </div>
+        <div class="auth-input-group">
+          <i class="ti ti-lock"></i>
+          <input class="campo" type="password" id="login-senha" placeholder="Senha">
+        </div>
+        <button class="btn-principal" onclick="fazerLogin()">Entrar <i class="ti ti-arrow-right"></i></button>
+        <p class="auth-link">Não tem conta? <a onclick="mostrarCadastro()">Cadastrar grátis</a></p>
       </div>
-      <input class="campo" type="number" id="cad-peso" placeholder="Peso inicial (kg)" step="0.1">
-      <input class="campo" type="number" id="cad-altura" placeholder="Altura (cm)">
-      <button class="btn-principal" onclick="fazerCadastro()">Criar conta</button>
-      <p class="auth-link">Já tem conta? <a onclick="mostrarLogin()">Entrar</a></p>
+      <div id="form-cadastro" style="display:none">
+        <div class="auth-form-titulo">Criar conta</div>
+        <div class="auth-form-sub">Comece sua jornada hoje</div>
+        <div class="auth-input-group">
+          <i class="ti ti-user"></i>
+          <input class="campo" type="text" id="cad-nome" placeholder="Nome completo">
+        </div>
+        <div class="auth-input-group">
+          <i class="ti ti-mail"></i>
+          <input class="campo" type="email" id="cad-email" placeholder="Email">
+        </div>
+        <div class="auth-input-group">
+          <i class="ti ti-lock"></i>
+          <input class="campo" type="password" id="cad-senha" placeholder="Senha">
+        </div>
+        <div class="linha-dupla">
+          <div class="auth-input-group">
+            <i class="ti ti-calendar"></i>
+            <input class="campo" type="number" id="cad-idade" placeholder="Idade">
+          </div>
+          <select class="campo" id="cad-genero">
+            <option value="" disabled selected>Gênero</option>
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+            <option value="O">Outro</option>
+          </select>
+        </div>
+        <div class="linha-dupla">
+          <div class="auth-input-group">
+            <i class="ti ti-weight"></i>
+            <input class="campo" type="number" id="cad-peso" placeholder="Peso (kg)" step="0.1">
+          </div>
+          <div class="auth-input-group">
+            <i class="ti ti-ruler"></i>
+            <input class="campo" type="number" id="cad-altura" placeholder="Altura (cm)">
+          </div>
+        </div>
+        <button class="btn-principal" onclick="fazerCadastro()">Criar conta <i class="ti ti-arrow-right"></i></button>
+        <p class="auth-link">Já tem conta? <a onclick="mostrarLogin()">Entrar</a></p>
+      </div>
     </div>
   </div>
 </div>
@@ -64,7 +113,6 @@
 
   <div class="main">
 
-    <!-- dashboard -->
     <div id="pagina-dashboard" class="pagina">
       <div class="topbar">
         <div class="greeting">
@@ -85,31 +133,19 @@
             <div class="checkin-item">
               <div class="checkin-lbl">Energia</div>
               <div class="checkin-stars" id="ci-energia">
-                <span onclick="setCheckin('energia',1)">○</span>
-                <span onclick="setCheckin('energia',2)">○</span>
-                <span onclick="setCheckin('energia',3)">○</span>
-                <span onclick="setCheckin('energia',4)">○</span>
-                <span onclick="setCheckin('energia',5)">○</span>
+                <span onclick="setCheckin('energia',1)">○</span><span onclick="setCheckin('energia',2)">○</span><span onclick="setCheckin('energia',3)">○</span><span onclick="setCheckin('energia',4)">○</span><span onclick="setCheckin('energia',5)">○</span>
               </div>
             </div>
             <div class="checkin-item">
               <div class="checkin-lbl">Sono</div>
               <div class="checkin-stars" id="ci-sono">
-                <span onclick="setCheckin('sono',1)">○</span>
-                <span onclick="setCheckin('sono',2)">○</span>
-                <span onclick="setCheckin('sono',3)">○</span>
-                <span onclick="setCheckin('sono',4)">○</span>
-                <span onclick="setCheckin('sono',5)">○</span>
+                <span onclick="setCheckin('sono',1)">○</span><span onclick="setCheckin('sono',2)">○</span><span onclick="setCheckin('sono',3)">○</span><span onclick="setCheckin('sono',4)">○</span><span onclick="setCheckin('sono',5)">○</span>
               </div>
             </div>
             <div class="checkin-item">
               <div class="checkin-lbl">Humor</div>
               <div class="checkin-stars" id="ci-humor">
-                <span onclick="setCheckin('humor',1)">○</span>
-                <span onclick="setCheckin('humor',2)">○</span>
-                <span onclick="setCheckin('humor',3)">○</span>
-                <span onclick="setCheckin('humor',4)">○</span>
-                <span onclick="setCheckin('humor',5)">○</span>
+                <span onclick="setCheckin('humor',1)">○</span><span onclick="setCheckin('humor',2)">○</span><span onclick="setCheckin('humor',3)">○</span><span onclick="setCheckin('humor',4)">○</span><span onclick="setCheckin('humor',5)">○</span>
               </div>
             </div>
           </div>
@@ -124,7 +160,6 @@
       </div>
     </div>
 
-    <!-- treino -->
     <div id="pagina-treino" class="pagina" style="display:none">
       <div class="topbar">
         <h2>Treino de hoje</h2>
@@ -151,7 +186,6 @@
       </div>
     </div>
 
-    <!-- medidas -->
     <div id="pagina-medidas" class="pagina" style="display:none">
       <div class="topbar">
         <h2>Medidas corporais</h2>
@@ -167,13 +201,11 @@
       </div>
     </div>
 
-    <!-- historico -->
     <div id="pagina-historico" class="pagina" style="display:none">
       <div class="topbar"><h2>Histórico de treinos</h2></div>
       <div class="content"><div id="lista-historico"></div></div>
     </div>
 
-    <!-- progresso -->
     <div id="pagina-progresso" class="pagina" style="display:none">
       <div class="topbar"><h2>Progresso</h2></div>
       <div class="content">
@@ -185,7 +217,6 @@
       </div>
     </div>
 
-    <!-- nutricao -->
     <div id="pagina-nutricao" class="pagina" style="display:none">
       <div class="topbar"><h2>Nutrição</h2></div>
       <div class="content">
@@ -198,36 +229,25 @@
         <div class="sec-title">Calculadora TDEE</div>
         <div class="tdee-box">
           <div class="linha-dupla">
-            <div>
-              <div class="campo-lbl">Peso (kg)</div>
-              <input class="campo" type="number" id="tdee-peso" placeholder="75">
-            </div>
-            <div>
-              <div class="campo-lbl">Altura (cm)</div>
-              <input class="campo" type="number" id="tdee-altura" placeholder="175">
-            </div>
+            <div><div class="campo-lbl">Peso (kg)</div><input class="campo" type="number" id="tdee-peso" placeholder="75"></div>
+            <div><div class="campo-lbl">Altura (cm)</div><input class="campo" type="number" id="tdee-altura" placeholder="175"></div>
           </div>
           <div class="linha-dupla">
-            <div>
-              <div class="campo-lbl">Idade</div>
-              <input class="campo" type="number" id="tdee-idade" placeholder="22">
-            </div>
-            <div>
-              <div class="campo-lbl">Gênero</div>
+            <div><div class="campo-lbl">Idade</div><input class="campo" type="number" id="tdee-idade" placeholder="22"></div>
+            <div><div class="campo-lbl">Gênero</div>
               <select class="campo" id="tdee-genero">
                 <option value="M">Masculino</option>
                 <option value="F">Feminino</option>
               </select>
             </div>
           </div>
-          <div>
-            <div class="campo-lbl">Nível de atividade</div>
+          <div><div class="campo-lbl">Nível de atividade</div>
             <select class="campo" id="tdee-atividade">
-              <option value="1.2">Sedentário (sem exercício)</option>
-              <option value="1.375">Leve (1-3x por semana)</option>
-              <option value="1.55" selected>Moderado (3-5x por semana)</option>
-              <option value="1.725">Intenso (6-7x por semana)</option>
-              <option value="1.9">Muito intenso (2x por dia)</option>
+              <option value="1.2">Sedentário</option>
+              <option value="1.375">Leve (1-3x/sem)</option>
+              <option value="1.55" selected>Moderado (3-5x/sem)</option>
+              <option value="1.725">Intenso (6-7x/sem)</option>
+              <option value="1.9">Muito intenso</option>
             </select>
           </div>
           <button class="btn-principal" onclick="calcularTDEE()">Calcular</button>
@@ -241,7 +261,6 @@
   </div>
 </div>
 
-<!-- modal exercicio -->
 <div id="modal-exercicio" class="modal" style="display:none">
   <div class="modal-overlay" onclick="fecharModal('modal-exercicio')"></div>
   <div class="modal-box">
@@ -271,7 +290,6 @@
   </div>
 </div>
 
-<!-- modal medida -->
 <div id="modal-medida" class="modal" style="display:none">
   <div class="modal-overlay" onclick="fecharModal('modal-medida')"></div>
   <div class="modal-box">
