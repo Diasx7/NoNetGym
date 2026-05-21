@@ -5,31 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>NoNet GYM</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
-<!-- tela de login/cadastro -->
-<div id="tela-auth" class="tela ativa">
+<div id="tela-auth">
   <div class="auth-box">
-    <div class="logo">No<span>Net</span></div>
-    <div class="logo-sub">GYM</div>
-    <p class="slogan">Offline. Focado. Forte.</p>
-
-    <div class="abas-auth">
-      <button class="aba ativa" onclick="trocarAba('login')">Entrar</button>
-      <button class="aba" onclick="trocarAba('cadastro')">Cadastrar</button>
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><i class="ti ti-barbell"></i></div>
+      <div>
+        <div class="auth-logo-nome">NoNet GYM</div>
+        <div class="auth-logo-sub">Offline. Focado. Forte.</div>
+      </div>
     </div>
-
-    <!-- formulario de login -->
     <div id="form-login">
+      <h2>Entrar</h2>
       <input class="campo" type="email" id="login-email" placeholder="Email">
       <input class="campo" type="password" id="login-senha" placeholder="Senha">
-      <button class="btn-principal" onclick="fazerLogin()">ENTRAR</button>
+      <button class="btn-principal" onclick="fazerLogin()">Entrar</button>
+      <p class="auth-link">Não tem conta? <a onclick="mostrarCadastro()">Cadastrar</a></p>
     </div>
-
-    <!-- formulario de cadastro -->
     <div id="form-cadastro" style="display:none">
+      <h2>Criar conta</h2>
       <input class="campo" type="text" id="cad-nome" placeholder="Nome completo">
       <input class="campo" type="email" id="cad-email" placeholder="Email">
       <input class="campo" type="password" id="cad-senha" placeholder="Senha">
@@ -43,237 +41,269 @@
         </select>
       </div>
       <input class="campo" type="number" id="cad-peso" placeholder="Peso inicial (kg)" step="0.1">
-      <button class="btn-principal" onclick="fazerCadastro()">CRIAR CONTA</button>
+      <input class="campo" type="number" id="cad-altura" placeholder="Altura (cm)">
+      <button class="btn-principal" onclick="fazerCadastro()">Criar conta</button>
+      <p class="auth-link">Já tem conta? <a onclick="mostrarLogin()">Entrar</a></p>
     </div>
   </div>
 </div>
 
-<!-- app principal (aparece depois do login) -->
-<div id="tela-app" class="tela" style="display:none">
-
-  <!-- pagina dashboard -->
-  <div id="pagina-dashboard" class="pagina ativa">
-    <div class="cabecalho">
-      <div>
-        <div class="saudacao" id="saudacao">OLÁ, ATLETA</div>
-        <div class="data-hoje" id="data-hoje"></div>
-      </div>
-      <div class="avatar" id="avatar" onclick="sair()">?</div>
-    </div>
-    <div class="conteudo">
-      <div class="grid-stats">
-        <div class="card-stat destaque">
-          <div class="stat-label">Treinos</div>
-          <div class="stat-numero" id="total-treinos">0</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">Peso atual</div>
-          <div class="stat-numero" id="peso-atual">—<span style="font-size:16px">kg</span></div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">Esta semana</div>
-          <div class="stat-numero" id="treinos-semana">0</div>
-        </div>
-        <div class="card-stat">
-          <div class="stat-label">Sequência</div>
-          <div class="stat-numero" id="sequencia">0🔥</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-titulo">Frequência semanal</div>
-        <div class="barra-semana" id="barra-semana">
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-          <div class="dia-dot"></div>
-        </div>
-        <div class="labels-semana">
-          <span>SEG</span><span>TER</span><span>QUA</span>
-          <span>QUI</span><span>SEX</span><span>SAB</span><span>DOM</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-titulo">Último treino</div>
-        <div id="ultimo-treino">Nenhum treino ainda.</div>
-      </div>
-    </div>
+<div id="tela-app" style="display:none">
+  <div class="sidebar">
+    <div class="logo-box"><i class="ti ti-barbell"></i></div>
+    <nav class="sidebar-nav">
+      <button class="nb on" onclick="irPara('dashboard',this)" title="Dashboard"><i class="ti ti-layout-dashboard"></i></button>
+      <button class="nb" onclick="irPara('treino',this)" title="Treino"><i class="ti ti-barbell"></i></button>
+      <button class="nb" onclick="irPara('medidas',this)" title="Medidas"><i class="ti ti-ruler-2"></i></button>
+      <button class="nb" onclick="irPara('historico',this)" title="Histórico"><i class="ti ti-calendar-stats"></i></button>
+      <button class="nb" onclick="irPara('progresso',this)" title="Progresso"><i class="ti ti-chart-line"></i></button>
+      <button class="nb" onclick="irPara('nutricao',this)" title="Nutrição"><i class="ti ti-salad"></i></button>
+    </nav>
+    <button class="nb sair-btn" onclick="sair()" title="Sair"><i class="ti ti-logout"></i></button>
   </div>
 
-  <!-- pagina exercicios -->
-  <div id="pagina-exercicios" class="pagina" style="display:none">
-    <div class="cabecalho">
-      <div class="titulo-pagina">
-        <span>EXERCÍ<span>CIOS</span></div>
-    </div>
-    <div class="conteudo">
-      <div class="card">
-        <div class="card-titulo">+ Novo exercício</div>
-        <input class="campo" type="text" id="ex-nome" placeholder="Nome do exercício">
-        <div class="linha-tripla">
-          <div>
-            <div class="campo-label">Séries</div>
-            <input class="campo" type="number" id="ex-series" placeholder="3" min="1">
-          </div>
-          <div>
-            <div class="campo-label">Reps</div>
-            <input class="campo" type="number" id="ex-reps" placeholder="10" min="1">
-          </div>
-          <div>
-            <div class="campo-label">Carga (kg)</div>
-            <input class="campo" type="number" id="ex-carga" placeholder="50" step="0.5">
-          </div>
+  <div class="main">
+
+    <!-- dashboard -->
+    <div id="pagina-dashboard" class="pagina">
+      <div class="topbar">
+        <div class="greeting">
+          <div class="greeting-sub" id="saudacao">Bom dia</div>
+          <div class="greeting-nome" id="nome-usuario"></div>
         </div>
-        <button class="btn-principal" onclick="adicionarExercicio()">ADICIONAR</button>
+        <div class="streak-pill"><i class="ti ti-flame"></i><span id="streak-num">0</span> dias</div>
       </div>
-
-      <div class="card-titulo" style="padding:0 2px 8px">Hoje — <span id="data-hoje-ex"></span></div>
-      <div id="lista-exercicios-hoje"></div>
-
-      <div class="card" style="margin-top:16px">
-        <div class="card-titulo">Evolução de carga</div>
-        <input class="campo" type="text" id="filtro-grafico" placeholder="Filtrar exercício..." oninput="atualizarGrafico()" style="margin-bottom:10px">
-        <div class="wrap-grafico"><canvas id="grafico-exercicios"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- pagina medidas -->
-  <div id="pagina-medidas" class="pagina" style="display:none">
-    <div class="cabecalho">
-      <div class="titulo-pagina">
-        <span>MEDI<span>DAS</span></div>
-    </div>
-    <div class="conteudo">
-      <div class="card">
-        <div class="card-titulo">Registrar medidas</div>
-        <div class="grid-medidas">
-          <div>
-            <div class="campo-label">Peso (kg)</div>
-            <input class="campo" type="number" id="m-peso" placeholder="75.5" step="0.1">
-          </div>
-          <div>
-            <div class="campo-label">Cintura (cm)</div>
-            <input class="campo" type="number" id="m-cintura" placeholder="82">
-          </div>
-          <div>
-            <div class="campo-label">Abdômen (cm)</div>
-            <input class="campo" type="number" id="m-abdomen" placeholder="88">
-          </div>
-          <div>
-            <div class="campo-label">Peito (cm)</div>
-            <input class="campo" type="number" id="m-peito" placeholder="100">
-          </div>
-          <div>
-            <div class="campo-label">Braço (cm)</div>
-            <input class="campo" type="number" id="m-braco" placeholder="38">
-          </div>
-          <div>
-            <div class="campo-label">Perna (cm)</div>
-            <input class="campo" type="number" id="m-perna" placeholder="58">
-          </div>
+      <div class="content">
+        <div class="stats-grid">
+          <div class="sc"><div class="sc-lbl">Treinos</div><div class="sc-val" id="total-treinos">0</div><div class="sc-sub">este mês</div></div>
+          <div class="sc"><div class="sc-lbl">Volume</div><div class="sc-val" id="volume-total">0</div><div class="sc-sub">kg totais</div></div>
+          <div class="sc"><div class="sc-lbl">PRs</div><div class="sc-val" id="total-prs">0</div><div class="sc-sub">registrados</div></div>
         </div>
-        <button class="btn-principal" onclick="salvarMedidas()" style="margin-top:8px">SALVAR</button>
-      </div>
-
-      <div class="card">
-        <div class="card-titulo">Evolução do peso</div>
-        <div class="wrap-grafico"><canvas id="grafico-peso"></canvas></div>
-      </div>
-
-      <div class="card">
-        <div class="card-titulo">Último registro</div>
-        <div id="ultimo-registro">Nenhuma medida ainda.</div>
+        <div id="checkin-box" class="checkin-box">
+          <div class="checkin-titulo">Como você está hoje?</div>
+          <div class="checkin-row">
+            <div class="checkin-item">
+              <div class="checkin-lbl">Energia</div>
+              <div class="checkin-stars" id="ci-energia">
+                <span onclick="setCheckin('energia',1)">○</span>
+                <span onclick="setCheckin('energia',2)">○</span>
+                <span onclick="setCheckin('energia',3)">○</span>
+                <span onclick="setCheckin('energia',4)">○</span>
+                <span onclick="setCheckin('energia',5)">○</span>
+              </div>
+            </div>
+            <div class="checkin-item">
+              <div class="checkin-lbl">Sono</div>
+              <div class="checkin-stars" id="ci-sono">
+                <span onclick="setCheckin('sono',1)">○</span>
+                <span onclick="setCheckin('sono',2)">○</span>
+                <span onclick="setCheckin('sono',3)">○</span>
+                <span onclick="setCheckin('sono',4)">○</span>
+                <span onclick="setCheckin('sono',5)">○</span>
+              </div>
+            </div>
+            <div class="checkin-item">
+              <div class="checkin-lbl">Humor</div>
+              <div class="checkin-stars" id="ci-humor">
+                <span onclick="setCheckin('humor',1)">○</span>
+                <span onclick="setCheckin('humor',2)">○</span>
+                <span onclick="setCheckin('humor',3)">○</span>
+                <span onclick="setCheckin('humor',4)">○</span>
+                <span onclick="setCheckin('humor',5)">○</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-checkin" onclick="salvarCheckin()">Registrar check-in</button>
+        </div>
+        <div class="sec-title">Semana atual</div>
+        <div class="week-grid" id="week-grid"></div>
+        <div class="sec-title">Músculo mais treinado</div>
+        <div id="musculo-mais" class="musculo-mais"></div>
+        <div class="sec-title">Último treino</div>
+        <div id="ultimo-treino"></div>
       </div>
     </div>
-  </div>
 
-  <!-- pagina historico -->
-  <div id="pagina-historico" class="pagina" style="display:none">
-    <div class="cabecalho">
-      <div class="titulo-pagina">
-        <span>HISTÓ<span>RICO</span></div>
-    </div>
-    <div class="conteudo">
-      <div id="lista-historico">
-        <div class="estado-vazio">
-          <div class="icone-vazio">📋</div>
-          <div>Nenhum treino ainda.</div>
+    <!-- treino -->
+    <div id="pagina-treino" class="pagina" style="display:none">
+      <div class="topbar">
+        <h2>Treino de hoje</h2>
+        <button class="btn-principal" onclick="abrirModalExercicio()"><i class="ti ti-plus"></i> Adicionar</button>
+      </div>
+      <div class="content">
+        <div class="treino-header">
+          <input class="campo" type="text" id="nome-treino" placeholder="Nome do treino (ex: Treino A)">
+          <button class="btn-sec" onclick="registrarTreino()">Registrar</button>
         </div>
+        <div id="timer-box" class="timer-box" style="display:none">
+          <div class="timer-titulo">Descanso</div>
+          <div class="timer-display" id="timer-display">60</div>
+          <div class="timer-btns">
+            <button onclick="setTimer(30)">30s</button>
+            <button onclick="setTimer(60)">60s</button>
+            <button onclick="setTimer(90)">90s</button>
+            <button onclick="setTimer(120)">2min</button>
+            <button onclick="pararTimer()" class="timer-stop"><i class="ti ti-x"></i></button>
+          </div>
+        </div>
+        <div class="sec-title">Exercícios de hoje</div>
+        <div id="lista-exercicios"></div>
       </div>
     </div>
-  </div>
 
-  <!-- pagina progresso -->
-  <div id="pagina-progresso" class="pagina" style="display:none">
-    <div class="cabecalho">
-      <div class="titulo-pagina">
-        <span>PROGRES<span>SO</span></div>
+    <!-- medidas -->
+    <div id="pagina-medidas" class="pagina" style="display:none">
+      <div class="topbar">
+        <h2>Medidas corporais</h2>
+        <button class="btn-principal" onclick="abrirModalMedida()"><i class="ti ti-plus"></i> Registrar</button>
+      </div>
+      <div class="content">
+        <div id="imc-card" class="imc-card"></div>
+        <div class="grafico-box"><canvas id="grafico-peso"></canvas></div>
+        <div class="sec-title">Comparativo</div>
+        <div id="comparativo-medidas"></div>
+        <div class="sec-title">Histórico</div>
+        <div id="lista-medidas"></div>
+      </div>
     </div>
-    <div class="conteudo">
-      <div class="grid-prog">
-        <div class="card-prog">
-          <div class="prog-num" id="p-total">0</div>
-          <div class="prog-label">Treinos totais</div>
-        </div>
-        <div class="card-prog">
-          <div class="prog-num" id="p-semana">0</div>
-          <div class="prog-label">Esta semana</div>
-        </div>
-        <div class="card-prog">
-          <div class="prog-num" id="p-sequencia">0🔥</div>
-          <div class="prog-label">Sequência</div>
-        </div>
-        <div class="card-prog">
-          <div class="prog-num" id="p-peso">—</div>
-          <div class="prog-label">Peso kg</div>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-titulo">Medidas — evolução</div>
-        <div class="wrap-grafico"><canvas id="grafico-medidas"></canvas></div>
-      </div>
+    <!-- historico -->
+    <div id="pagina-historico" class="pagina" style="display:none">
+      <div class="topbar"><h2>Histórico de treinos</h2></div>
+      <div class="content"><div id="lista-historico"></div></div>
+    </div>
 
-      <div class="card" style="margin-top:14px">
-        <div class="card-titulo">🏆 Conquistas</div>
+    <!-- progresso -->
+    <div id="pagina-progresso" class="pagina" style="display:none">
+      <div class="topbar"><h2>Progresso</h2></div>
+      <div class="content">
+        <div class="grafico-box"><canvas id="grafico-volume"></canvas></div>
+        <div class="sec-title">Personal Records</div>
+        <div id="lista-prs"></div>
+        <div class="sec-title">Conquistas</div>
         <div id="lista-conquistas"></div>
       </div>
     </div>
-  </div>
 
-  <!-- barra de navegacao -->
-  <nav class="nav-bar">
-    <button class="nav-item ativo" onclick="irPara('dashboard', this)">
-      <span>🏠</span>Home
-    </button>
-    <button class="nav-item" onclick="irPara('exercicios', this)">
-      <span>🏋️</span>Treino
-    </button>
-    <button class="nav-item" onclick="irPara('medidas', this)">
-      <span>📏</span>Medidas
-    </button>
-    <button class="nav-item" onclick="irPara('historico', this)">
-      <span>📋</span>Histórico
-    </button>
-    <button class="nav-item" onclick="irPara('progresso', this)">
-      <span>📊</span>Progresso
-    </button>
-  </nav>
+    <!-- nutricao -->
+    <div id="pagina-nutricao" class="pagina" style="display:none">
+      <div class="topbar"><h2>Nutrição</h2></div>
+      <div class="content">
+        <div class="hidratacao-box">
+          <div class="hidra-titulo"><i class="ti ti-droplet"></i> Hidratação de hoje</div>
+          <div class="hidra-copos" id="hidra-copos"></div>
+          <div class="hidra-info" id="hidra-info">0 / 8 copos</div>
+          <button class="btn-principal" onclick="adicionarCopo()"><i class="ti ti-plus"></i> Registrar copo</button>
+        </div>
+        <div class="sec-title">Calculadora TDEE</div>
+        <div class="tdee-box">
+          <div class="linha-dupla">
+            <div>
+              <div class="campo-lbl">Peso (kg)</div>
+              <input class="campo" type="number" id="tdee-peso" placeholder="75">
+            </div>
+            <div>
+              <div class="campo-lbl">Altura (cm)</div>
+              <input class="campo" type="number" id="tdee-altura" placeholder="175">
+            </div>
+          </div>
+          <div class="linha-dupla">
+            <div>
+              <div class="campo-lbl">Idade</div>
+              <input class="campo" type="number" id="tdee-idade" placeholder="22">
+            </div>
+            <div>
+              <div class="campo-lbl">Gênero</div>
+              <select class="campo" id="tdee-genero">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="campo-lbl">Nível de atividade</div>
+            <select class="campo" id="tdee-atividade">
+              <option value="1.2">Sedentário (sem exercício)</option>
+              <option value="1.375">Leve (1-3x por semana)</option>
+              <option value="1.55" selected>Moderado (3-5x por semana)</option>
+              <option value="1.725">Intenso (6-7x por semana)</option>
+              <option value="1.9">Muito intenso (2x por dia)</option>
+            </select>
+          </div>
+          <button class="btn-principal" onclick="calcularTDEE()">Calcular</button>
+          <div id="tdee-resultado" class="tdee-resultado" style="display:none"></div>
+        </div>
+        <div class="sec-title">Calorias queimadas hoje</div>
+        <div id="calorias-queimadas" class="calorias-box"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal exercicio -->
+<div id="modal-exercicio" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="fecharModal('modal-exercicio')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Novo exercício</h3>
+      <button onclick="fecharModal('modal-exercicio')"><i class="ti ti-x"></i></button>
+    </div>
+    <input class="campo" type="text" id="ex-nome" placeholder="Nome do exercício">
+    <select class="campo" id="ex-grupo">
+      <option value="">Grupo muscular</option>
+      <option value="Peito">Peito</option>
+      <option value="Costas">Costas</option>
+      <option value="Ombro">Ombro</option>
+      <option value="Bíceps">Bíceps</option>
+      <option value="Tríceps">Tríceps</option>
+      <option value="Perna">Perna</option>
+      <option value="Glúteo">Glúteo</option>
+      <option value="Abdômen">Abdômen</option>
+      <option value="Cardio">Cardio</option>
+    </select>
+    <div class="linha-tripla">
+      <div><div class="campo-lbl">Séries</div><input class="campo" type="number" id="ex-series" placeholder="4" min="1"></div>
+      <div><div class="campo-lbl">Reps</div><input class="campo" type="number" id="ex-reps" placeholder="10" min="1"></div>
+      <div><div class="campo-lbl">Carga (kg)</div><input class="campo" type="number" id="ex-carga" placeholder="50" step="0.5"></div>
+    </div>
+    <button class="btn-principal" onclick="salvarExercicio()">Salvar exercício</button>
+  </div>
+</div>
+
+<!-- modal medida -->
+<div id="modal-medida" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="fecharModal('modal-medida')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Nova medida</h3>
+      <button onclick="fecharModal('modal-medida')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="linha-dupla">
+      <div><div class="campo-lbl">Peso (kg)</div><input class="campo" type="number" id="med-peso" placeholder="75" step="0.1"></div>
+      <div><div class="campo-lbl">Braço (cm)</div><input class="campo" type="number" id="med-braco" placeholder="38"></div>
+    </div>
+    <div class="linha-dupla">
+      <div><div class="campo-lbl">Cintura (cm)</div><input class="campo" type="number" id="med-cintura" placeholder="82"></div>
+      <div><div class="campo-lbl">Quadril (cm)</div><input class="campo" type="number" id="med-quadril" placeholder="95"></div>
+    </div>
+    <div class="linha-dupla">
+      <div><div class="campo-lbl">Perna (cm)</div><input class="campo" type="number" id="med-perna" placeholder="56"></div>
+      <div><div class="campo-lbl">Peito (cm)</div><input class="campo" type="number" id="med-peito" placeholder="100"></div>
+    </div>
+    <button class="btn-principal" onclick="salvarMedida()">Salvar medida</button>
+  </div>
 </div>
 
 <div id="toast"></div>
 
-<!-- scripts -->
 <script src="js/app.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
 <script src="js/exercises.js"></script>
 <script src="js/measures.js"></script>
-<script src="js/dashboard.js"></script>
-
+<script src="js/workouts.js"></script>
+<script src="js/nutrition.js"></script>
+<script src="js/achievements.js"></script>
 </body>
 </html>

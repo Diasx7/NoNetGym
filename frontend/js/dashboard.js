@@ -1,193 +1,195 @@
-﻿async function atualizarDashboard() {
-  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}')
+﻿const checkinState = { energia: 0, sono: 0, humor: 0 }
 
-  // saudacao com o primeiro nome
-  const primeiroNome = (usuario.name || 'Atleta').split(' ')[0].toUpperCase()
-  document.getElementById('saudacao').textContent = 'OL├ü, ' + primeiroNome
-
-  // data de hoje formatada
-  document.getElementById('data-hoje').textContent = new Date().toLocaleDateString('pt-BR', {
-    weekday: 'long', day: '2-digit', month: 'long'
-  })
-
-  // avatar com inicial do nome
-  document.getElementById('avatar').textContent = (usuario.name || 'A')[0].toUpperCase()
-
-  // busca dados na api
-  const [resEx, resMed] = await Promise.all([
-    chamarAPI('/exercises'),
-    chamarAPI('/measures')
+async function carregarDashboard() {
+  await Promise.all([
+    carregarStreak(),
+    carregarEstatisticas(),
+    carregarSemana(),
+    carregarMusculoMaisTreinado(),
+    carregarUltimoTreino()
   ])
-
-  const exercicios = resEx.ok ? resEx.dados : []
-  const medidas = resMed.ok ? resMed.dados : []
-
-  // calcula stats
-  const stats = calcularStats(exercicios, medidas, usuario)
-
-  document.getElementById('total-treinos').textContent = stats.total
-  document.getElementById('treinos-semana').textContent = stats.semana
-  document.getElementById('sequencia').textContent = stats.sequencia + '­ƒöÑ'
-  document.getElementById('peso-atual').innerHTML = (stats.peso || 'ÔÇö') + '<span style="font-size:16px">kg</span>'
-
-  // barra de dias da semana
-  atualizarBarraSemana(exercicios)
-
-  // ultimo treino
-  mostrarUltimoTreino(exercicios)
 }
 
-function calcularStats(exercicios, medidas, usuario) {
-  // agrupa exercicios por dia
-  const diasTreinados = {}
-  exercicios.forEach(ex => {
-    const dia = ex.date ? ex.date.slice(0, 10) : ''
-    if (dia) diasTreinados[dia] = true
-  })
-  const dias = Object.keys(diasTreinados).sort()
-  const total = dias.length
+async function carregarStreak() {
+  const res = await chamarAPI('/exercises', 'GET')
+  if (!res.ok) return
 
-  // conta treinos da semana atual
-  const agora = new Date()
-  const diaDaSemana = agora.getDay()
-  const inicioSemana = new Date(agora)
-  inicioSemana.setDate(agora.getDate() - (diaDaSemana === 0 ? 6 : diaDaSemana - 1))
-  const chaveInicioSemana = inicioSemana.toISOString().slice(0, 10)
-  const semana = dias.filter(d => d >= chaveInicioSemana).length
+  const datas = [...new Set(res.dados.map(e => e.exercise_date?.slice(0,10) || e.date?.slice(0,10)))]
+    .filter(Boolean).sort().reverse()
 
-  // calcula sequencia de dias seguidos
-  let sequencia = 0
-  const verificar = new Date()
-  for (let i = 0; i < 60; i++) {
-    const chave = verificar.toISOString().slice(0, 10)
-    if (diasTreinados[chave]) sequencia++
-    else if (i > 0) break
-    verificar.setDate(verificar.getDate() - 1)
+  let streak = 0
+  const hoje = new Date()
+  hoje.setHours(0,0,0,0)
+
+  for (let i = 0; i < datas.length; i++) {
+    const d = new Date(datas[i] + 'T00:00:00')
+    const diff = Math.round((hoje - d) / 86400000)
+    if (diff === i || diff === i + 1) streak++
+    else break
   }
 
-  // pega peso atual
-  let peso = null
-  if (medidas.length) peso = medidas[0].weight
-  if (!peso && usuario.weight_initial) peso = usuario.weight_initial
-
-  return { total, semana, sequencia, peso }
+  document.getElementById('streak-num').textContent = streak
 }
 
-function atualizarBarraSemana(exercicios) {
-  // agrupa por dia
-  const diasTreinados = {}
-  exercicios.forEach(ex => {
-    const dia = ex.date ? ex.date.slice(0, 10) : ''
-    if (dia) diasTreinados[dia] = true
-  })
+async function carregarEstatisticas() {
+  const res = await chamarAPI('/exercises', 'GET')
+  if (!res.ok) return
 
-  const agora = new Date()
-  const diaDaSemana = agora.getDay()
-  const inicioSemana = new Date(agora)
-  inicioSemana.setDate(agora.getDate() - (diaDaSemana === 0 ? 6 : diaDaSemana - 1))
+  const mes = new Date().getMonth()
+  const ano = new Date().getFullYear()
 
-  const pontos = document.getElementById('barra-semana').children
+  const diasMes = [...new Set(
+    res.dados
+      .map(e => e.exercise_date?.slice(0,10) || e.date?.slice(0,10))
+      .filter(d => {
+        if (!d) return false
+        const dt = new Date(d)
+        return dt.getMonth() === mes && dt.getFullYear() === ano
+      })
+  )]
+
+  document.getElementById('total-treinos').textContent = diasMes.length
+
+  // calcula volume total
+  const volume = res.dados.reduce((acc, e) => {
+    return acc + ((e.sets || 0) * (e.reps || 0) * (parseFloat(e.weight) || 0))
+  }, 0)
+  document.getElementById('volume-total').textContent =
+    volume >= 1000 ? (volume/1000).toFixed(1) + 't' : volume + 'kg'
+
+  // conta prs
+  const prs = calcularPRs(res.dados)
+  document.getElementById('total-prs').textContent = prs.length
+}
+
+async function carregarSemana() {
+  const res = await chamarAPI('/exercises', 'GET')
+  const exercicios = res.ok ? res.dados : []
+
+  const diasSemana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const hoje = new Date()
+  hoje.setHours(0,0,0,0)
+
+  const inicioDaSemana = new Date(hoje)
+  inicioDaSemana.setDate(hoje.getDate() - hoje.getDay())
+
+  const datasComTreino = exercicios.map(e =>
+    e.exercise_date?.slice(0,10) || e.date?.slice(0,10)
+  ).filter(Boolean)
+
+  let html = ''
   for (let i = 0; i < 7; i++) {
-    const dia = new Date(inicioSemana)
-    dia.setDate(inicioSemana.getDate() + i)
-    const chave = dia.toISOString().slice(0, 10)
-    pontos[i].classList.toggle('feito', !!diasTreinados[chave])
-  }
-}
+    const dia = new Date(inicioDaSemana)
+    dia.setDate(inicioDaSemana.getDate() + i)
+    const diaStr = dia.toISOString().slice(0,10)
+    const treinou = datasComTreino.includes(diaStr)
+    const ehHoje = diaStr === hoje.toISOString().slice(0,10)
 
-function mostrarUltimoTreino(exercicios) {
-  const el = document.getElementById('ultimo-treino')
-  if (!exercicios.length) {
-    el.textContent = 'Nenhum treino ainda.'
-    return
-  }
-
-  // pega o dia mais recente
-  const diaRecente = exercicios[0].date ? exercicios[0].date.slice(0, 10) : ''
-  const doUltimoDia = exercicios.filter(e => e.date && e.date.slice(0, 10) === diaRecente)
-
-  el.innerHTML = `
-    <div style="font-weight:600;margin-bottom:8px;color:var(--verde)">${formatarData(diaRecente)}</div>
-    ${doUltimoDia.map(ex => `
-      <div style="font-size:13px;color:var(--cinza);padding:2px 0">
-        ${ex.name} ÔÇö ${ex.sets}x${ex.reps} ┬À ${ex.load}kg
-      </div>
-    `).join('')}
-  `
-}
-
-async function renderizarHistorico() {
-  const res = await chamarAPI('/exercises')
-  const el = document.getElementById('lista-historico')
-
-  if (!res.ok || !res.dados.length) {
-    el.innerHTML = `
-      <div class="estado-vazio">
-        <div class="icone-vazio">­ƒôï</div>
-        <div>Nenhum treino ainda.</div>
+    html += `
+      <div class="wd ${treinou ? 'treinou' : ''} ${ehHoje ? 'hoje' : ''}">
+        <div class="wd-nome">${diasSemana[dia.getDay()]}</div>
+        <div class="wd-circulo">
+          ${treinou ? '<i class="ti ti-check" style="font-size:11px"></i>' : dia.getDate()}
+        </div>
       </div>`
+  }
+  document.getElementById('week-grid').innerHTML = html
+}
+
+async function carregarMusculoMaisTreinado() {
+  const res = await chamarAPI('/exercises', 'GET')
+  if (!res.ok || res.dados.length === 0) {
+    document.getElementById('musculo-mais').innerHTML = '<div class="vazio">Nenhum exercício ainda.</div>'
     return
   }
 
-  // agrupa por data
-  const porData = {}
-  res.dados.forEach(ex => {
-    const dia = ex.date ? ex.date.slice(0, 10) : 'sem data'
-    if (!porData[dia]) porData[dia] = []
-    porData[dia].push(ex)
+  const contagem = {}
+  res.dados.forEach(e => {
+    if (e.name) {
+      const grupo = e.name
+      contagem[grupo] = (contagem[grupo] || 0) + 1
+    }
   })
 
-  el.innerHTML = Object.entries(porData).map(([data, lista]) => `
-    <div style="margin-bottom:20px">
-      <div class="data-historico">${formatarData(data)}</div>
-      ${lista.map(ex => `
-        <div class="item-exercicio">
-          <div>
-            <div class="ex-nome">${ex.name}</div>
-            <div class="ex-detalhe">${ex.sets}x${ex.reps}</div>
-          </div>
-          <div class="badge-carga">${ex.load}kg</div>
+  // agrupa por grupo muscular se tiver
+  const porGrupo = {}
+  res.dados.forEach(e => {
+    if (e.grupo_muscular || e.group) {
+      const g = e.grupo_muscular || e.group
+      porGrupo[g] = (porGrupo[g] || 0) + 1
+    }
+  })
+
+  const dados = Object.keys(porGrupo).length > 0 ? porGrupo : contagem
+  const max = Math.max(...Object.values(dados))
+  const sorted = Object.entries(dados).sort((a,b) => b[1]-a[1]).slice(0,5)
+
+  document.getElementById('musculo-mais').innerHTML = sorted.map(([nome, qtd]) => `
+    <div class="musculo-row">
+      <div class="musculo-nome">${nome}</div>
+      <div class="musculo-barra-track">
+        <div class="musculo-barra-fill" style="width:${(qtd/max*100).toFixed(0)}%"></div>
+      </div>
+      <div class="musculo-count">${qtd}</div>
+    </div>
+  `).join('')
+}
+
+async function carregarUltimoTreino() {
+  const res = await chamarAPI('/exercises', 'GET')
+  if (!res.ok || res.dados.length === 0) {
+    document.getElementById('ultimo-treino').innerHTML = '<div class="vazio">Nenhum treino ainda.</div>'
+    return
+  }
+
+  const ultimaData = (res.dados[0].exercise_date || res.dados[0].date)?.slice(0,10)
+  const exs = res.dados.filter(e =>
+    (e.exercise_date || e.date)?.slice(0,10) === ultimaData
+  )
+
+  let html = `<div class="ultimo-card"><div class="ultimo-data">${formatarData(ultimaData)}</div>`
+  exs.forEach(e => {
+    html += `
+      <div class="ex-card">
+        <div class="ex-dot"></div>
+        <div class="ex-info">
+          <div class="ex-nome">${e.name}</div>
+          <div class="ex-meta">${e.sets}x${e.reps} · ${e.weight}kg</div>
         </div>
-      `).join('')}
-    </div>
-  `).join('')
+      </div>`
+  })
+  html += '</div>'
+  document.getElementById('ultimo-treino').innerHTML = html
 }
 
-async function renderizarProgresso() {
-  const [resEx, resMed] = await Promise.all([
-    chamarAPI('/exercises'),
-    chamarAPI('/measures')
-  ])
-
-  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}')
-  const exercicios = resEx.ok ? resEx.dados : []
-  const medidas = resMed.ok ? resMed.dados : []
-  const stats = calcularStats(exercicios, medidas, usuario)
-
-  document.getElementById('p-total').textContent = stats.total
-  document.getElementById('p-semana').textContent = stats.semana
-  document.getElementById('p-sequencia').textContent = stats.sequencia + '­ƒöÑ'
-  document.getElementById('p-peso').textContent = stats.peso || 'ÔÇö'
-
-  renderizarGraficoMedidas()
-  renderizarConquistas(stats, medidas)
+// check-in
+function setCheckin(campo, valor) {
+  checkinState[campo] = valor
+  const ids = { energia: 'ci-energia', sono: 'ci-sono', humor: 'ci-humor' }
+  const container = document.getElementById(ids[campo])
+  container.querySelectorAll('span').forEach((s, i) => {
+    s.textContent = i < valor ? '●' : '○'
+    s.classList.toggle('on', i < valor)
+  })
 }
 
-function renderizarConquistas(stats, medidas) {
-  const conquistas = [
-    { icone: '­ƒÅà', texto: 'Primeiro treino!',         ganhou: stats.total >= 1 },
-    { icone: '­ƒöÑ', texto: '7 treinos no total',        ganhou: stats.total >= 7 },
-    { icone: 'ÔÜí', texto: '3 dias seguidos',            ganhou: stats.sequencia >= 3 },
-    { icone: '­ƒôÅ', texto: 'Medidas registradas',        ganhou: medidas.length >= 1 },
-    { icone: '­ƒÅå', texto: '10 treinos completados',     ganhou: stats.total >= 10 },
-    { icone: '­ƒÆ¬', texto: '30 treinos ÔÇö voc├¬ ├® faixa!', ganhou: stats.total >= 30 },
-  ]
+async function salvarCheckin() {
+  if (!checkinState.energia && !checkinState.sono && !checkinState.humor) {
+    mostrarToast('Avalie pelo menos um item')
+    return
+  }
+  mostrarToast('Check-in registrado!')
+  document.getElementById('checkin-box').style.display = 'none'
+}
 
-  document.getElementById('lista-conquistas').innerHTML = conquistas.map(c => `
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--borda);opacity:${c.ganhou ? 1 : 0.3}">
-      <span style="font-size:24px">${c.icone}</span>
-      <span style="font-size:14px;font-weight:${c.ganhou ? 600 : 400}">${c.texto}</span>
-      ${c.ganhou ? '<span style="margin-left:auto;color:var(--verde);font-size:12px">Ô£ô</span>' : ''}
-    </div>
-  `).join('')
+// calcula prs (maior carga por exercicio)
+function calcularPRs(exercicios) {
+  const prs = {}
+  exercicios.forEach(e => {
+    const carga = parseFloat(e.weight) || 0
+    if (!prs[e.name] || carga > prs[e.name].carga) {
+      prs[e.name] = { carga, data: e.exercise_date || e.date }
+    }
+  })
+  return Object.entries(prs).map(([nome, v]) => ({ nome, ...v }))
 }

@@ -1,65 +1,62 @@
 ﻿let graficoPeso = null
-let graficoMedidas = null
 
-async function salvarMedidas() {
-  const dados = {
-    weight:  document.getElementById('m-peso').value    || null,
-    waist:   document.getElementById('m-cintura').value || null,
-    abdomen: document.getElementById('m-abdomen').value || null,
-    chest:   document.getElementById('m-peito').value   || null,
-    arm:     document.getElementById('m-braco').value   || null,
-    leg:     document.getElementById('m-perna').value   || null,
-    date: hoje()
-  }
+async function carregarMedidas() {
+  const res = await chamarAPI('/measures', 'GET')
+  if (!res.ok) return
 
-  // verifica se preencheu pelo menos um campo
-  const temAlgo = Object.values(dados).some(v => v !== null && v !== '' && v !== hoje())
-  if (!temAlgo) {
-    mostrarToast('Preencha pelo menos uma medida!')
+  renderizarIMC(res.dados)
+  renderizarGraficoPeso(res.dados)
+  renderizarComparativo(res.dados)
+  renderizarListaMedidas(res.dados)
+}
+
+function renderizarIMC(medidas) {
+  const comPeso = medidas.filter(m => m.weight)
+  const usuario = getUsuario()
+
+  if (comPeso.length === 0 || !usuario) {
+    document.getElementById('imc-card').innerHTML =
+      '<div class="vazio">Registre seu peso e altura para ver o IMC.</div>'
     return
   }
 
-  const res = await chamarAPI('/measures', 'POST', dados)
+  const peso = parseFloat(comPeso[0].weight)
+  const altura = parseFloat(usuario.height || 170) / 100
+  const imc = (peso / (altura * altura)).toFixed(1)
 
-  if (res.ok) {
-    mostrarToast('Medidas salvas! ­ƒôÅ')
-    // limpa os campos
-    ;['m-peso','m-cintura','m-abdomen','m-peito','m-braco','m-perna'].forEach(id => {
-      document.getElementById(id).value = ''
-    })
-    renderizarGraficoPeso()
-    renderizarUltimoRegistro()
-    atualizarDashboard()
-  } else {
-    mostrarToast(res.dados.error || 'Erro ao salvar medidas')
-  }
+  let classe = ''
+  let cor = ''
+  if (imc < 18.5) { classe = 'Abaixo do peso'; cor = '#38bdf8' }
+  else if (imc < 25) { classe = 'Peso normal'; cor = '#4ade80' }
+  else if (imc < 30) { classe = 'Sobrepeso'; cor = '#EF9F27' }
+  else { classe = 'Obesidade'; cor = '#ff4444' }
+
+  document.getElementById('imc-card').innerHTML = `
+    <div class="imc-titulo">IMC</div>
+    <div class="imc-valor" style="color:${cor}">${imc}</div>
+    <div class="imc-class" style="color:${cor}">${classe}</div>
+  `
 }
 
-async function renderizarGraficoPeso() {
-  const res = await chamarAPI('/measures')
-  if (!res.ok) return
-
-  const medidas = res.dados.reverse() // mais antigas primeiro
-  const labels = medidas.map(m => m.date ? m.date.slice(5, 10) : '')
-  const pesos = medidas.map(m => m.weight)
-
-  const ctx = document.getElementById('grafico-peso')
-  if (!ctx) return
+function renderizarGraficoPeso(medidas) {
+  const comPeso = medidas.filter(m => m.weight).reverse()
   if (graficoPeso) graficoPeso.destroy()
 
+  const ctx = document.getElementById('grafico-peso').getContext('2d')
   graficoPeso = new Chart(ctx, {
     type: 'line',
     data: {
-      labels,
+      labels: comPeso.map(m => formatarData((m.measure_date || m.date)?.slice(0,10))),
       datasets: [{
         label: 'Peso (kg)',
-        data: pesos,
-        borderColor: '#e8ff00',
-        backgroundColor: '#e8ff0022',
-        tension: 0.4,
-        fill: true,
-        pointRadius: 5,
-        borderWidth: 2
+        data: comPeso.map(m => m.weight),
+        borderColor: '#c8ff00',
+        backgroundColor: 'rgba(200,255,0,0.06)',
+        borderWidth: 2,
+        pointBackgroundColor: '#c8ff00',
+        pointRadius: 4,
+        tension: 0.3,
+        fill: true
       }]
     },
     options: {
@@ -67,77 +64,101 @@ async function renderizarGraficoPeso() {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#555' }, grid: { color: '#222' } },
-        y: { ticks: { color: '#555' }, grid: { color: '#222' } }
+        x: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#1a1a1a' } },
+        y: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#1a1a1a' } }
       }
     }
   })
 }
 
-async function renderizarUltimoRegistro() {
-  const res = await chamarAPI('/measures')
-  if (!res.ok) return
-
-  const el = document.getElementById('ultimo-registro')
-
-  if (!res.dados.length) {
-    el.textContent = 'Nenhuma medida ainda.'
+function renderizarComparativo(medidas) {
+  if (medidas.length < 2) {
+    document.getElementById('comparativo-medidas').innerHTML =
+      '<div class="vazio">Registre pelo menos 2 medidas para ver o comparativo.</div>'
     return
   }
 
-  const ultimo = res.dados[0] // ja vem ordenado por data desc
+  const primeira = medidas[medidas.length - 1]
+  const ultima = medidas[0]
 
-  const campos = {
-    weight: 'Peso', waist: 'Cintura', abdomen: 'Abd├┤men',
-    chest: 'Peito', arm: 'Bra├ºo', leg: 'Perna'
-  }
+  const campos = [
+    { key: 'weight', label: 'Peso', unidade: 'kg' },
+    { key: 'arm', label: 'Braço', unidade: 'cm' },
+    { key: 'waist', label: 'Cintura', unidade: 'cm' },
+    { key: 'abdomen', label: 'Abdômen', unidade: 'cm' },
+    { key: 'chest', label: 'Peito', unidade: 'cm' },
+    { key: 'leg', label: 'Perna', unidade: 'cm' }
+  ]
 
-  el.innerHTML = Object.entries(campos)
-    .filter(([key]) => ultimo[key])
-    .map(([key, label]) => `
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--borda)">
-        <span style="color:var(--cinza)">${label}</span>
-        <span style="font-weight:600">${ultimo[key]} ${key === 'weight' ? 'kg' : 'cm'}</span>
-      </div>
-    `).join('')
+  const html = campos.filter(c => ultima[c.key] && primeira[c.key]).map(c => {
+    const diff = (parseFloat(ultima[c.key]) - parseFloat(primeira[c.key])).toFixed(1)
+    const pos = parseFloat(diff) > 0
+    const diffStr = pos ? '+' + diff : diff
+    return `
+      <div class="comp-item">
+        <div class="comp-nome">${c.label}</div>
+        <div class="comp-vals">
+          <div class="comp-atual">${ultima[c.key]}${c.unidade}</div>
+          <div class="comp-diff ${pos ? 'pos' : 'neg'}">${diffStr}</div>
+        </div>
+      </div>`
+  }).join('')
+
+  document.getElementById('comparativo-medidas').innerHTML =
+    `<div class="comparativo">${html}</div>`
 }
 
-// grafico com varias medidas junto ÔÇö usado na pagina de progresso
-async function renderizarGraficoMedidas() {
-  const res = await chamarAPI('/measures')
-  if (!res.ok) return
+function renderizarListaMedidas(medidas) {
+  if (medidas.length === 0) {
+    document.getElementById('lista-medidas').innerHTML =
+      '<div class="vazio">Nenhuma medida registrada ainda.</div>'
+    return
+  }
 
-  const medidas = res.dados.reverse()
-  const labels = medidas.map(m => m.date ? m.date.slice(5, 10) : '')
+  document.getElementById('lista-medidas').innerHTML = medidas.map(m => `
+    <div class="medida-card">
+      <div class="medida-data">${formatarData((m.measure_date || m.date)?.slice(0,10))}</div>
+      <div class="medida-grid">
+        ${m.weight ? `<div class="medida-item"><div class="m-lbl">Peso</div><div class="m-val">${m.weight}kg</div></div>` : ''}
+        ${m.arm ? `<div class="medida-item"><div class="m-lbl">Braço</div><div class="m-val">${m.arm}cm</div></div>` : ''}
+        ${m.waist ? `<div class="medida-item"><div class="m-lbl">Cintura</div><div class="m-val">${m.waist}cm</div></div>` : ''}
+        ${m.abdomen ? `<div class="medida-item"><div class="m-lbl">Abdômen</div><div class="m-val">${m.abdomen}cm</div></div>` : ''}
+        ${m.chest ? `<div class="medida-item"><div class="m-lbl">Peito</div><div class="m-val">${m.chest}cm</div></div>` : ''}
+        ${m.leg ? `<div class="medida-item"><div class="m-lbl">Perna</div><div class="m-val">${m.leg}cm</div></div>` : ''}
+      </div>
+    </div>
+  `).join('')
+}
 
-  const campos = { weight: '#e8ff00', waist: '#ff4d00', chest: '#00e676', arm: '#00b0ff' }
+async function salvarMedida() {
+  const peso = document.getElementById('med-peso').value
+  const braco = document.getElementById('med-braco').value
+  const cintura = document.getElementById('med-cintura').value
+  const quadril = document.getElementById('med-quadril').value
+  const perna = document.getElementById('med-perna').value
+  const peito = document.getElementById('med-peito').value
 
-  const ctx = document.getElementById('grafico-medidas')
-  if (!ctx) return
-  if (graficoMedidas) graficoMedidas.destroy()
-
-  graficoMedidas = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: Object.entries(campos).map(([campo, cor]) => ({
-        label: campo.charAt(0).toUpperCase() + campo.slice(1),
-        data: medidas.map(m => m[campo] || null),
-        borderColor: cor,
-        backgroundColor: cor + '22',
-        tension: 0.4,
-        pointRadius: 3,
-        borderWidth: 2
-      }))
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#888', font: { size: 10 } } } },
-      scales: {
-        x: { ticks: { color: '#555' }, grid: { color: '#222' } },
-        y: { ticks: { color: '#555' }, grid: { color: '#222' } }
-      }
-    }
+  const res = await chamarAPI('/measures', 'POST', {
+    weight: peso || null,
+    arm: braco || null,
+    waist: cintura || null,
+    abdomen: quadril || null,
+    chest: peito || null,
+    leg: perna || null,
+    date: hoje()
   })
+
+  if (res.ok) {
+    mostrarToast('Medida salva!')
+    fecharModal('modal-medida')
+    document.getElementById('med-peso').value = ''
+    document.getElementById('med-braco').value = ''
+    document.getElementById('med-cintura').value = ''
+    document.getElementById('med-quadril').value = ''
+    document.getElementById('med-perna').value = ''
+    document.getElementById('med-peito').value = ''
+    carregarMedidas()
+  } else {
+    mostrarToast(res.dados.error || 'Erro ao salvar')
+  }
 }

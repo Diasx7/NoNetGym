@@ -1,54 +1,60 @@
-// endereço do backend
 const API = 'https://nonetgym-production.up.railway.app/api'
 
-// pega o token salvo no localStorage
+// pega o token
 function getToken() {
   return localStorage.getItem('token')
 }
 
-// mostra mensagem rapida na tela
+// pega usuario logado
+function getUsuario() {
+  const u = localStorage.getItem('usuario')
+  return u ? JSON.parse(u) : null
+}
+
+// toast rapido
 function mostrarToast(msg) {
   const t = document.getElementById('toast')
   t.textContent = msg
   t.classList.add('visivel')
-  setTimeout(() => t.classList.remove('visivel'), 2200)
+  setTimeout(() => t.classList.remove('visivel'), 2500)
 }
 
-// pega a data de hoje no formato YYYY-MM-DD
+// data de hoje
 function hoje() {
   return new Date().toISOString().slice(0, 10)
 }
 
-// formata data pra exibir bonito
+// formata data bonito
 function formatarData(d) {
   return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR', {
-    weekday: 'long', day: '2-digit', month: 'short'
+    day: '2-digit', month: 'short', year: 'numeric'
   })
+}
+
+// saudacao por horario
+function getSaudacao() {
+  const h = new Date().getHours()
+  if (h < 12) return 'Bom dia'
+  if (h < 18) return 'Boa tarde'
+  return 'Boa noite'
 }
 
 // troca de pagina
 function irPara(pagina, btn) {
   document.querySelectorAll('.pagina').forEach(p => p.style.display = 'none')
   document.getElementById('pagina-' + pagina).style.display = 'flex'
-  document.getElementById('pagina-' + pagina).style.flexDirection = 'column'
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'))
+  if (btn) btn.classList.add('on')
 
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('ativo'))
-  if (btn) btn.classList.add('ativo')
-
-  // carrega os dados da pagina
-  if (pagina === 'exercicios') {
-    renderizarExercicios()
-    atualizarGrafico()
-  }
-  if (pagina === 'medidas') {
-    renderizarGraficoPeso()
-    renderizarUltimoRegistro()
-  }
-  if (pagina === 'historico') renderizarHistorico()
-  if (pagina === 'progresso') renderizarProgresso()
+  if (pagina === 'dashboard') carregarDashboard()
+  if (pagina === 'treino') carregarExercicios()
+  if (pagina === 'medidas') carregarMedidas()
+  if (pagina === 'historico') carregarHistorico()
+  if (pagina === 'progresso') carregarProgresso()
+  if (pagina === 'nutricao') carregarNutricao()
 }
 
-// faz requisicao pra API com o token
+// chamada pra api
 async function chamarAPI(rota, metodo, dados) {
   try {
     const config = {
@@ -59,7 +65,6 @@ async function chamarAPI(rota, metodo, dados) {
       }
     }
     if (dados) config.body = JSON.stringify(dados)
-
     const res = await fetch(API + rota, config)
     const json = await res.json()
     return { ok: res.ok, dados: json }
@@ -69,12 +74,30 @@ async function chamarAPI(rota, metodo, dados) {
   }
 }
 
-// verifica se tem sessao salva ao abrir o app
+// abre modais
+function abrirModalExercicio() {
+  document.getElementById('modal-exercicio').style.display = 'flex'
+}
+function abrirModalMedida() {
+  document.getElementById('modal-medida').style.display = 'flex'
+}
+function fecharModal(id) {
+  document.getElementById(id).style.display = 'none'
+}
+
+// sair
+function sair() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('usuario')
+  document.getElementById('tela-app').style.display = 'none'
+  document.getElementById('tela-auth').style.display = 'flex'
+}
+
+// verifica sessao ao abrir
 window.onload = function() {
   const token = getToken()
-  const usuario = localStorage.getItem('usuario')
-
+  const usuario = getUsuario()
   if (token && usuario) {
-    entrarNoApp()
+    entrarNoApp(usuario)
   }
 }

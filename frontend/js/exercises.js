@@ -1,13 +1,56 @@
-﻿let graficoCarga = null
+﻿let timerInterval = null
+let timerSegundos = 0
 
-async function adicionarExercicio() {
+async function carregarExercicios() {
+  const res = await chamarAPI('/exercises', 'GET')
+  if (!res.ok) return
+
+  const hojeStr = hoje()
+  const exsHoje = res.dados.filter(e =>
+    (e.exercise_date || e.date)?.slice(0,10) === hojeStr
+  )
+
+  const lista = document.getElementById('lista-exercicios')
+
+  if (exsHoje.length === 0) {
+    lista.innerHTML = '<div class="vazio">Nenhum exercício adicionado hoje.</div>'
+    return
+  }
+
+  // pega prs pra mostrar badge
+  const prs = calcularPRs(res.dados)
+  const prMap = {}
+  prs.forEach(p => prMap[p.nome] = p.carga)
+
+  lista.innerHTML = exsHoje.map(e => {
+    const isPR = parseFloat(e.weight) > 0 && parseFloat(e.weight) >= (prMap[e.name] || 0)
+    return `
+      <div class="ex-card">
+        <div class="ex-dot"></div>
+        <div class="ex-info">
+          <div class="ex-nome">${e.name}</div>
+          <div class="ex-meta">${e.sets} séries · ${e.reps} reps · ${e.weight}kg</div>
+        </div>
+        ${isPR ? '<div class="pr-badge"><i class="ti ti-trophy" style="font-size:10px"></i> PR</div>' : ''}
+        <button class="btn-timer" onclick="iniciarTimer()">
+          <i class="ti ti-clock"></i>
+        </button>
+        <button class="btn-del" onclick="deletarExercicio(${e.id})">
+          <i class="ti ti-trash"></i>
+        </button>
+      </div>`
+  }).join('')
+}
+
+async function salvarExercicio() {
   const nome = document.getElementById('ex-nome').value.trim()
+  const grupo = document.getElementById('ex-grupo').value
   const series = document.getElementById('ex-series').value
   const reps = document.getElementById('ex-reps').value
   const carga = document.getElementById('ex-carga').value
 
   if (!nome || !series || !reps) {
-    mostrarToast('Preencha nome, s├®ries e reps!')
+    mostrarToast('Nome, séries e reps são obrigatórios')
     return
   }
 
@@ -20,14 +63,14 @@ async function adicionarExercicio() {
   })
 
   if (res.ok) {
-    mostrarToast('Exerc├¡cio adicionado! ­ƒÆ¬')
-    // limpa os campos
+    mostrarToast('Exercício salvo!')
+    fecharModal('modal-exercicio')
     document.getElementById('ex-nome').value = ''
+    document.getElementById('ex-grupo').value = ''
     document.getElementById('ex-series').value = ''
     document.getElementById('ex-reps').value = ''
     document.getElementById('ex-carga').value = ''
-    renderizarExercicios()
-    atualizarDashboard()
+    carregarExercicios()
   } else {
     mostrarToast(res.dados.error || 'Erro ao salvar')
   }
@@ -36,92 +79,53 @@ async function adicionarExercicio() {
 async function deletarExercicio(id) {
   const res = await chamarAPI('/exercises/' + id, 'DELETE')
   if (res.ok) {
-    mostrarToast('Removido!')
-    renderizarExercicios()
-    atualizarDashboard()
+    mostrarToast('Exercício removido')
+    carregarExercicios()
   }
 }
 
-async function renderizarExercicios() {
-  const dataHoje = hoje()
-  document.getElementById('data-hoje-ex').textContent = new Date().toLocaleDateString('pt-BR')
-
-  const res = await chamarAPI('/exercises')
-  if (!res.ok) return
-
-  // filtra so os de hoje
-  const deHoje = res.dados.filter(e => e.date && e.date.slice(0, 10) === dataHoje)
-  const lista = document.getElementById('lista-exercicios-hoje')
-
-  if (!deHoje.length) {
-    lista.innerHTML = `
-      <div class="estado-vazio">
-        <div class="icone-vazio">­ƒÅï´©Å</div>
-        <div>Adicione seu primeiro exerc├¡cio hoje!</div>
-      </div>`
+async function registrarTreino() {
+  const nome = document.getElementById('nome-treino').value.trim()
+  if (!nome) {
+    mostrarToast('Dê um nome ao treino')
     return
   }
-
-  lista.innerHTML = deHoje.map(ex => `
-    <div class="item-exercicio">
-      <div>
-        <div class="ex-nome">${ex.name}</div>
-        <div class="ex-detalhe">${ex.sets}x${ex.reps} ┬À ${ex.load}kg</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <div class="badge-carga">${ex.load}kg</div>
-        <button class="btn-apagar" onclick="deletarExercicio(${ex.id})">Ô£ò</button>
-      </div>
-    </div>
-  `).join('')
+  mostrarToast('Treino "' + nome + '" registrado!')
+  document.getElementById('nome-treino').value = ''
 }
 
-async function atualizarGrafico() {
-  const filtro = (document.getElementById('filtro-grafico')?.value || '').toLowerCase()
-  const res = await chamarAPI('/exercises')
-  if (!res.ok) return
+// timer de descanso
+function iniciarTimer() {
+  setTimer(60)
+}
 
-  const dados = res.dados
+function setTimer(segundos) {
+  if (timerInterval) clearInterval(timerInterval)
+  timerSegundos = segundos
+  document.getElementById('timer-box').style.display = 'flex'
+  atualizarDisplayTimer()
 
-  // agrupa por nome do exercicio
-  const agrupado = {}
-  dados.forEach(ex => {
-    if (filtro && !ex.name.toLowerCase().includes(filtro)) return
-    if (!agrupado[ex.name]) agrupado[ex.name] = { datas: [], cargas: [] }
-    agrupado[ex.name].datas.push(ex.date ? ex.date.slice(5, 10) : '')
-    agrupado[ex.name].cargas.push(ex.load)
-  })
-
-  const ctx = document.getElementById('grafico-exercicios')
-  if (!ctx) return
-  if (graficoCarga) graficoCarga.destroy()
-
-  const cores = ['#e8ff00', '#ff4d00', '#00e676', '#00b0ff', '#ff80ab']
-  const datasets = Object.entries(agrupado).map(([nome, info], i) => ({
-    label: nome,
-    data: info.cargas,
-    borderColor: cores[i % cores.length],
-    backgroundColor: cores[i % cores.length] + '22',
-    tension: 0.4,
-    fill: true,
-    pointRadius: 4,
-    borderWidth: 2
-  }))
-
-  // pega todas as datas sem repetir
-  const todasDatas = [...new Set(dados.map(e => e.date ? e.date.slice(5, 10) : ''))].sort()
-
-  graficoCarga = new Chart(ctx, {
-    type: 'line',
-    data: { labels: todasDatas, datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#888', font: { size: 11 } } } },
-      scales: {
-        x: { ticks: { color: '#555' }, grid: { color: '#222' } },
-        y: { ticks: { color: '#555' }, grid: { color: '#222' } }
-      }
+  timerInterval = setInterval(() => {
+    timerSegundos--
+    atualizarDisplayTimer()
+    if (timerSegundos <= 0) {
+      clearInterval(timerInterval)
+      timerInterval = null
+      mostrarToast('Descansou! Hora da próxima série.')
+      document.getElementById('timer-box').style.display = 'none'
     }
-  })
+  }, 1000)
+}
+
+function atualizarDisplayTimer() {
+  const min = Math.floor(timerSegundos / 60)
+  const seg = timerSegundos % 60
+  document.getElementById('timer-display').textContent =
+    min > 0 ? `${min}:${seg.toString().padStart(2,'0')}` : timerSegundos
+}
+
+function pararTimer() {
+  if (timerInterval) clearInterval(timerInterval)
+  timerInterval = null
+  document.getElementById('timer-box').style.display = 'none'
 }
