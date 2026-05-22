@@ -42,53 +42,24 @@
       <div id="form-login">
         <div class="auth-form-titulo">Bem-vindo de volta</div>
         <div class="auth-form-sub">Entre na sua conta para continuar</div>
-        <div class="auth-input-group">
-          <i class="ti ti-mail"></i>
-          <input class="campo" type="email" id="login-email" placeholder="Email">
-        </div>
-        <div class="auth-input-group">
-          <i class="ti ti-lock"></i>
-          <input class="campo" type="password" id="login-senha" placeholder="Senha">
-        </div>
+        <div class="auth-input-group"><i class="ti ti-mail"></i><input class="campo" type="email" id="login-email" placeholder="Email"></div>
+        <div class="auth-input-group"><i class="ti ti-lock"></i><input class="campo" type="password" id="login-senha" placeholder="Senha"></div>
         <button class="btn-principal" onclick="fazerLogin()">Entrar <i class="ti ti-arrow-right"></i></button>
         <p class="auth-link">Não tem conta? <a onclick="mostrarCadastro()">Cadastrar grátis</a></p>
       </div>
       <div id="form-cadastro" style="display:none">
         <div class="auth-form-titulo">Criar conta</div>
         <div class="auth-form-sub">Comece sua jornada hoje</div>
-        <div class="auth-input-group">
-          <i class="ti ti-user"></i>
-          <input class="campo" type="text" id="cad-nome" placeholder="Nome completo">
-        </div>
-        <div class="auth-input-group">
-          <i class="ti ti-mail"></i>
-          <input class="campo" type="email" id="cad-email" placeholder="Email">
-        </div>
-        <div class="auth-input-group">
-          <i class="ti ti-lock"></i>
-          <input class="campo" type="password" id="cad-senha" placeholder="Senha">
+        <div class="auth-input-group"><i class="ti ti-user"></i><input class="campo" type="text" id="cad-nome" placeholder="Nome completo"></div>
+        <div class="auth-input-group"><i class="ti ti-mail"></i><input class="campo" type="email" id="cad-email" placeholder="Email"></div>
+        <div class="auth-input-group"><i class="ti ti-lock"></i><input class="campo" type="password" id="cad-senha" placeholder="Senha"></div>
+        <div class="linha-dupla">
+          <div class="auth-input-group"><i class="ti ti-calendar"></i><input class="campo" type="number" id="cad-idade" placeholder="Idade"></div>
+          <select class="campo" id="cad-genero"><option value="" disabled selected>Gênero</option><option value="M">Masculino</option><option value="F">Feminino</option><option value="O">Outro</option></select>
         </div>
         <div class="linha-dupla">
-          <div class="auth-input-group">
-            <i class="ti ti-calendar"></i>
-            <input class="campo" type="number" id="cad-idade" placeholder="Idade">
-          </div>
-          <select class="campo" id="cad-genero">
-            <option value="" disabled selected>Gênero</option>
-            <option value="M">Masculino</option>
-            <option value="F">Feminino</option>
-            <option value="O">Outro</option>
-          </select>
-        </div>
-        <div class="linha-dupla">
-          <div class="auth-input-group">
-            <i class="ti ti-weight"></i>
-            <input class="campo" type="number" id="cad-peso" placeholder="Peso (kg)" step="0.1">
-          </div>
-          <div class="auth-input-group">
-            <i class="ti ti-ruler"></i>
-            <input class="campo" type="number" id="cad-altura" placeholder="Altura (cm)">
-          </div>
+          <div class="auth-input-group"><i class="ti ti-weight"></i><input class="campo" type="number" id="cad-peso" placeholder="Peso (kg)" step="0.1"></div>
+          <div class="auth-input-group"><i class="ti ti-ruler"></i><input class="campo" type="number" id="cad-altura" placeholder="Altura (cm)"></div>
         </div>
         <button class="btn-principal" onclick="fazerCadastro()">Criar conta <i class="ti ti-arrow-right"></i></button>
         <p class="auth-link">Já tem conta? <a onclick="mostrarLogin()">Entrar</a></p>
@@ -116,10 +87,7 @@
 
     <div id="pagina-dashboard" class="pagina">
       <div class="topbar">
-        <div class="greeting">
-          <div class="greeting-sub" id="saudacao">Bom dia</div>
-          <div class="greeting-nome" id="nome-usuario"></div>
-        </div>
+        <div class="greeting"><div class="greeting-sub" id="saudacao">Bom dia</div><div class="greeting-nome" id="nome-usuario"></div></div>
         <div class="streak-pill"><i class="ti ti-flame"></i><span id="streak-num">0</span> dias</div>
       </div>
       <div class="content">
@@ -131,24 +99,9 @@
         <div id="checkin-box" class="checkin-box">
           <div class="checkin-titulo">Como você está hoje?</div>
           <div class="checkin-row">
-            <div class="checkin-item">
-              <div class="checkin-lbl">Energia</div>
-              <div class="checkin-stars" id="ci-energia">
-                <span onclick="setCheckin('energia',1)">○</span><span onclick="setCheckin('energia',2)">○</span><span onclick="setCheckin('energia',3)">○</span><span onclick="setCheckin('energia',4)">○</span><span onclick="setCheckin('energia',5)">○</span>
-              </div>
-            </div>
-            <div class="checkin-item">
-              <div class="checkin-lbl">Sono</div>
-              <div class="checkin-stars" id="ci-sono">
-                <span onclick="setCheckin('sono',1)">○</span><span onclick="setCheckin('sono',2)">○</span><span onclick="setCheckin('sono',3)">○</span><span onclick="setCheckin('sono',4)">○</span><span onclick="setCheckin('sono',5)">○</span>
-              </div>
-            </div>
-            <div class="checkin-item">
-              <div class="checkin-lbl">Humor</div>
-              <div class="checkin-stars" id="ci-humor">
-                <span onclick="setCheckin('humor',1)">○</span><span onclick="setCheckin('humor',2)">○</span><span onclick="setCheckin('humor',3)">○</span><span onclick="setCheckin('humor',4)">○</span><span onclick="setCheckin('humor',5)">○</span>
-              </div>
-            </div>
+            <div class="checkin-item"><div class="checkin-lbl">Energia</div><div class="checkin-stars" id="ci-energia"><span onclick="setCheckin('energia',1)">○</span><span onclick="setCheckin('energia',2)">○</span><span onclick="setCheckin('energia',3)">○</span><span onclick="setCheckin('energia',4)">○</span><span onclick="setCheckin('energia',5)">○</span></div></div>
+            <div class="checkin-item"><div class="checkin-lbl">Sono</div><div class="checkin-stars" id="ci-sono"><span onclick="setCheckin('sono',1)">○</span><span onclick="setCheckin('sono',2)">○</span><span onclick="setCheckin('sono',3)">○</span><span onclick="setCheckin('sono',4)">○</span><span onclick="setCheckin('sono',5)">○</span></div></div>
+            <div class="checkin-item"><div class="checkin-lbl">Humor</div><div class="checkin-stars" id="ci-humor"><span onclick="setCheckin('humor',1)">○</span><span onclick="setCheckin('humor',2)">○</span><span onclick="setCheckin('humor',3)">○</span><span onclick="setCheckin('humor',4)">○</span><span onclick="setCheckin('humor',5)">○</span></div></div>
           </div>
           <button class="btn-checkin" onclick="salvarCheckin()">Registrar check-in</button>
         </div>
@@ -167,8 +120,13 @@
         <button class="btn-principal" onclick="abrirModalExercicio()"><i class="ti ti-plus"></i> Adicionar</button>
       </div>
       <div class="content">
-        <div class="treino-header">
-          <input class="campo" type="text" id="nome-treino" placeholder="Nome do treino (ex: Treino A)">
+        <div class="fichas-row">
+          <button class="ficha-btn on" onclick="selecionarFicha(this,'Treino A')">A</button>
+          <button class="ficha-btn" onclick="selecionarFicha(this,'Treino B')">B</button>
+          <button class="ficha-btn" onclick="selecionarFicha(this,'Treino C')">C</button>
+          <button class="ficha-btn" onclick="selecionarFicha(this,'Treino D')">D</button>
+          <div class="ficha-nome-atual" id="ficha-nome-atual">Treino A</div>
+          <input type="hidden" id="nome-treino" value="Treino A">
           <button class="btn-sec" onclick="registrarTreino()">Registrar</button>
         </div>
         <div id="timer-box" class="timer-box" style="display:none">
@@ -235,12 +193,7 @@
           </div>
           <div class="linha-dupla">
             <div><div class="campo-lbl">Idade</div><input class="campo" type="number" id="tdee-idade" placeholder="22"></div>
-            <div><div class="campo-lbl">Gênero</div>
-              <select class="campo" id="tdee-genero">
-                <option value="M">Masculino</option>
-                <option value="F">Feminino</option>
-              </select>
-            </div>
+            <div><div class="campo-lbl">Gênero</div><select class="campo" id="tdee-genero"><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
           </div>
           <div><div class="campo-lbl">Nível de atividade</div>
             <select class="campo" id="tdee-atividade">
@@ -262,98 +215,16 @@
     <div id="pagina-alimentar" class="pagina" style="display:none">
       <div class="topbar"><h2>Plano alimentar</h2></div>
       <div class="content">
-        <div class="refeicao-card">
-          <div class="refeicao-header">
-            <div class="refeicao-icon" style="background:#1a1a00"><i class="ti ti-sun" style="color:#EF9F27"></i></div>
-            <div>
-              <div class="refeicao-titulo">Café da manhã</div>
-              <div class="refeicao-horario">06:00 – 08:00</div>
-            </div>
-            <div class="refeicao-kcal">~500 kcal</div>
-          </div>
-          <div class="refeicao-itens">
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Omelete de claras com aveia</div>
-              <div class="refeicao-macro"><span class="macro p">35g prot</span><span class="macro c">40g carb</span><span class="macro g">8g gord</span></div>
-              <div class="refeicao-preparo">Bata 4 claras com 1 ovo inteiro. Adicione 3 col. sopa de aveia. Cozinhe em frigideira antiaderente por 3 min cada lado.</div>
-            </div>
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Fruta + iogurte grego</div>
-              <div class="refeicao-macro"><span class="macro p">15g prot</span><span class="macro c">25g carb</span><span class="macro g">3g gord</span></div>
-              <div class="refeicao-preparo">200g de iogurte grego natural sem açúcar com 1 banana média fatiada ou 1 maçã.</div>
-            </div>
-          </div>
+        <div class="dias-semana-nav" id="dias-semana-nav">
+          <button class="dia-btn on" onclick="selecionarDia(this,0)">Seg</button>
+          <button class="dia-btn" onclick="selecionarDia(this,1)">Ter</button>
+          <button class="dia-btn" onclick="selecionarDia(this,2)">Qua</button>
+          <button class="dia-btn" onclick="selecionarDia(this,3)">Qui</button>
+          <button class="dia-btn" onclick="selecionarDia(this,4)">Sex</button>
+          <button class="dia-btn" onclick="selecionarDia(this,5)">Sáb</button>
+          <button class="dia-btn" onclick="selecionarDia(this,6)">Dom</button>
         </div>
-
-        <div class="refeicao-card">
-          <div class="refeicao-header">
-            <div class="refeicao-icon" style="background:#001a0a"><i class="ti ti-bolt" style="color:#4ade80"></i></div>
-            <div>
-              <div class="refeicao-titulo">Pré-treino</div>
-              <div class="refeicao-horario">60–90 min antes do treino</div>
-            </div>
-            <div class="refeicao-kcal">~400 kcal</div>
-          </div>
-          <div class="refeicao-itens">
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Batata doce com frango grelhado</div>
-              <div class="refeicao-macro"><span class="macro p">40g prot</span><span class="macro c">50g carb</span><span class="macro g">5g gord</span></div>
-              <div class="refeicao-preparo">200g de batata doce cozida amassada. 150g de frango temperado com limão e alho, grelhado em frigideira por 6 min cada lado.</div>
-            </div>
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Banana com pasta de amendoim</div>
-              <div class="refeicao-macro"><span class="macro p">8g prot</span><span class="macro c">30g carb</span><span class="macro g">10g gord</span></div>
-              <div class="refeicao-preparo">1 banana média com 1 col. sopa de pasta de amendoim integral. Opção rápida e prática.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="refeicao-card">
-          <div class="refeicao-header">
-            <div class="refeicao-icon" style="background:#001020"><i class="ti ti-barbell" style="color:#38bdf8"></i></div>
-            <div>
-              <div class="refeicao-titulo">Pós-treino</div>
-              <div class="refeicao-horario">Até 30 min após o treino</div>
-            </div>
-            <div class="refeicao-kcal">~550 kcal</div>
-          </div>
-          <div class="refeicao-itens">
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Whey + carboidrato rápido</div>
-              <div class="refeicao-macro"><span class="macro p">50g prot</span><span class="macro c">60g carb</span><span class="macro g">4g gord</span></div>
-              <div class="refeicao-preparo">1 scoop de whey protein com água ou leite desnatado. Acompanhe com 1 banana ou 200ml de suco de uva integral.</div>
-            </div>
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Arroz branco com carne magra</div>
-              <div class="refeicao-macro"><span class="macro p">45g prot</span><span class="macro c">55g carb</span><span class="macro g">6g gord</span></div>
-              <div class="refeicao-preparo">150g de arroz branco cozido. 180g de patinho ou coxão mole refogado com cebola, alho e tomate.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="refeicao-card">
-          <div class="refeicao-header">
-            <div class="refeicao-icon" style="background:#1a0010"><i class="ti ti-moon" style="color:#c084fc"></i></div>
-            <div>
-              <div class="refeicao-titulo">Jantar</div>
-              <div class="refeicao-horario">19:00 – 21:00</div>
-            </div>
-            <div class="refeicao-kcal">~450 kcal</div>
-          </div>
-          <div class="refeicao-itens">
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Salmão com legumes no vapor</div>
-              <div class="refeicao-macro"><span class="macro p">42g prot</span><span class="macro c">15g carb</span><span class="macro g">18g gord</span></div>
-              <div class="refeicao-preparo">200g de filé de salmão temperado com limão e ervas. Assar a 200°C por 18 min. Acompanhe com brócolis e cenoura no vapor.</div>
-            </div>
-            <div class="refeicao-item">
-              <div class="refeicao-nome">Caseína antes de dormir</div>
-              <div class="refeicao-macro"><span class="macro p">25g prot</span><span class="macro c">10g carb</span><span class="macro g">3g gord</span></div>
-              <div class="refeicao-preparo">200g de cottage ou 1 scoop de caseína com água. Proteína de digestão lenta ideal para recuperação noturna.</div>
-            </div>
-          </div>
-        </div>
-
+        <div id="plano-dia"></div>
       </div>
     </div>
 
@@ -363,22 +234,13 @@
 <div id="modal-exercicio" class="modal" style="display:none">
   <div class="modal-overlay" onclick="fecharModal('modal-exercicio')"></div>
   <div class="modal-box">
-    <div class="modal-header">
-      <h3>Novo exercício</h3>
-      <button onclick="fecharModal('modal-exercicio')"><i class="ti ti-x"></i></button>
-    </div>
+    <div class="modal-header"><h3>Novo exercício</h3><button onclick="fecharModal('modal-exercicio')"><i class="ti ti-x"></i></button></div>
     <input class="campo" type="text" id="ex-nome" placeholder="Nome do exercício">
     <select class="campo" id="ex-grupo">
       <option value="">Grupo muscular</option>
-      <option value="Peito">Peito</option>
-      <option value="Costas">Costas</option>
-      <option value="Ombro">Ombro</option>
-      <option value="Bíceps">Bíceps</option>
-      <option value="Tríceps">Tríceps</option>
-      <option value="Perna">Perna</option>
-      <option value="Glúteo">Glúteo</option>
-      <option value="Abdômen">Abdômen</option>
-      <option value="Cardio">Cardio</option>
+      <option value="Peito">Peito</option><option value="Costas">Costas</option><option value="Ombro">Ombro</option>
+      <option value="Bíceps">Bíceps</option><option value="Tríceps">Tríceps</option><option value="Perna">Perna</option>
+      <option value="Glúteo">Glúteo</option><option value="Abdômen">Abdômen</option><option value="Cardio">Cardio</option>
     </select>
     <div class="linha-tripla">
       <div><div class="campo-lbl">Séries</div><input class="campo" type="number" id="ex-series" placeholder="4" min="1"></div>
@@ -392,10 +254,7 @@
 <div id="modal-medida" class="modal" style="display:none">
   <div class="modal-overlay" onclick="fecharModal('modal-medida')"></div>
   <div class="modal-box">
-    <div class="modal-header">
-      <h3>Nova medida</h3>
-      <button onclick="fecharModal('modal-medida')"><i class="ti ti-x"></i></button>
-    </div>
+    <div class="modal-header"><h3>Nova medida</h3><button onclick="fecharModal('modal-medida')"><i class="ti ti-x"></i></button></div>
     <div class="linha-dupla">
       <div><div class="campo-lbl">Peso (kg)</div><input class="campo" type="number" id="med-peso" placeholder="75" step="0.1"></div>
       <div><div class="campo-lbl">Braço (cm)</div><input class="campo" type="number" id="med-braco" placeholder="38"></div>
@@ -422,5 +281,6 @@
 <script src="js/workouts.js"></script>
 <script src="js/nutrition.js"></script>
 <script src="js/achievements.js"></script>
+<script src="js/meal_plan.js"></script>
 </body>
 </html>

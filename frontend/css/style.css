@@ -1,20 +1,8 @@
 ﻿*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-
-:root{
-  --verde:#c8ff00;
-  --preto:#0a0a0a;
-  --card:#1a1a1a;
-  --borda:#2a2a2a;
-  --borda2:#333;
-  --texto:#f0f0f0;
-  --muted:#888;
-  --muted2:#555;
-  --danger:#ff4444;
-}
-
+:root{--verde:#c8ff00;--preto:#0a0a0a;--card:#1a1a1a;--borda:#2a2a2a;--borda2:#333;--texto:#f0f0f0;--muted:#888;--muted2:#555;--danger:#ff4444}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--preto);color:var(--texto);height:100vh;overflow:hidden}
 
-/* ── AUTH ── */
+/* AUTH */
 #tela-auth{height:100vh;display:flex;align-items:center;justify-content:center;background:var(--preto);position:relative;overflow:hidden}
 .auth-bg{position:absolute;inset:0;z-index:0}
 .auth-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12}
@@ -58,7 +46,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--preto);colo
 .auth-link a:hover{text-decoration:underline}
 input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0px 1000px #0d0d0d inset;-webkit-text-fill-color:#f0f0f0;transition:background-color 5000s ease-in-out 0s}
 
-/* ── LAYOUT ── */
+/* LAYOUT */
 #tela-app{display:flex;height:100vh}
 .sidebar{width:64px;background:#090909;border-right:0.5px solid var(--borda);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:4px;flex-shrink:0}
 .logo-box{width:36px;height:36px;background:var(--verde);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
@@ -78,14 +66,14 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .streak-pill{background:var(--card);border:0.5px solid var(--borda);border-radius:20px;padding:7px 14px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--verde);font-weight:500}
 .content{flex:1;padding:14px 22px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
 
-/* ── STATS ── */
+/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sc{background:var(--card);border:0.5px solid var(--borda);border-radius:10px;padding:12px 14px}
 .sc-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
 .sc-val{font-size:24px;font-weight:600;color:var(--texto)}
 .sc-sub{font-size:11px;color:var(--muted);margin-top:2px}
 
-/* ── CHECKIN ── */
+/* CHECKIN */
 .checkin-box{background:var(--card);border:0.5px solid var(--borda);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .checkin-titulo{font-size:13px;font-weight:500;color:var(--muted)}
 .checkin-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -97,7 +85,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .btn-checkin{background:transparent;border:0.5px solid var(--borda2);border-radius:8px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
 .btn-checkin:hover{border-color:var(--verde);color:var(--verde)}
 
-/* ── SEMANA ── */
+/* SEMANA */
 .sec-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .wd{background:var(--card);border:0.5px solid var(--borda);border-radius:8px;padding:7px 4px;text-align:center}
@@ -106,7 +94,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .wd.treinou .wd-circulo{background:var(--verde);color:var(--preto);font-size:12px}
 .wd.hoje{border-color:var(--verde)}
 
-/* ── MUSCULO ── */
+/* MUSCULO */
 .musculo-mais{display:flex;flex-direction:column;gap:6px}
 .musculo-row{display:flex;align-items:center;gap:10px}
 .musculo-nome{font-size:12px;color:var(--muted);width:70px;flex-shrink:0}
@@ -114,9 +102,14 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .musculo-barra-fill{height:100%;background:var(--verde);border-radius:3px;transition:width .4s}
 .musculo-count{font-size:11px;color:var(--muted);width:24px;text-align:right}
 
-/* ── TREINO ── */
-.treino-header{display:flex;gap:8px;align-items:center}
-.treino-header .campo{flex:1}
+/* FICHAS */
+.fichas-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ficha-btn{width:38px;height:38px;border-radius:8px;border:0.5px solid var(--borda2);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;flex-shrink:0}
+.ficha-btn:hover{border-color:var(--verde);color:var(--verde)}
+.ficha-btn.on{background:var(--verde);color:var(--preto);border-color:var(--verde)}
+.ficha-nome-atual{flex:1;font-size:13px;color:var(--muted);padding:0 4px}
+
+/* TREINO */
 .ex-card{background:var(--card);border:0.5px solid var(--borda);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .ex-dot{width:7px;height:7px;border-radius:50%;background:var(--verde);flex-shrink:0}
 .ex-info{flex:1}
@@ -129,7 +122,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .btn-timer{background:transparent;border:0.5px solid var(--borda2);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s}
 .btn-timer:hover{border-color:var(--verde);color:var(--verde)}
 
-/* ── TIMER ── */
+/* TIMER */
 .timer-box{background:var(--card);border:0.5px solid var(--verde);border-radius:12px;padding:16px;text-align:center;display:flex;flex-direction:column;gap:10px}
 .timer-titulo{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .timer-display{font-size:48px;font-weight:600;color:var(--verde);font-variant-numeric:tabular-nums}
@@ -138,7 +131,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .timer-btns button:hover{background:var(--verde);color:var(--preto)}
 .timer-stop{background:#1a0000 !important;color:var(--danger) !important}
 
-/* ── MEDIDAS ── */
+/* MEDIDAS */
 .imc-card{background:var(--card);border:0.5px solid var(--borda);border-radius:12px;padding:14px 16px}
 .imc-titulo{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
 .imc-valor{font-size:32px;font-weight:600}
@@ -158,32 +151,44 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .medida-item .m-lbl{font-size:11px;color:var(--muted)}
 .medida-item .m-val{font-size:14px;font-weight:500;color:var(--texto)}
 
-/* ── HISTORICO ── */
-.hist-card{background:var(--card);border:0.5px solid var(--borda);border-radius:12px;padding:14px 16px;margin-bottom:8px}
-.hist-topo{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.hist-data{font-size:12px;color:var(--muted);font-weight:500}
-.hist-volume{font-size:13px;font-weight:600;color:var(--verde)}
-.hist-exs{display:flex;flex-direction:column;gap:6px}
-.hist-ex{display:flex;align-items:center;gap:8px}
-.hist-ex-dot{width:5px;height:5px;border-radius:50%;background:var(--borda2);flex-shrink:0}
+/* HISTORICO */
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hist-card{background:var(--card);border:0.5px solid var(--borda);border-radius:12px;margin-bottom:8px;overflow:hidden;animation:cardIn .3s ease both}
+.hist-topo{display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;transition:background .15s}
+.hist-topo:hover{background:rgba(255,255,255,.03)}
+.hist-esq{display:flex;align-items:center;gap:14px;flex:1}
+.hist-data-box{text-align:center;min-width:36px;flex-shrink:0}
+.hist-dia{font-size:20px;font-weight:700;color:var(--texto);line-height:1}
+.hist-mes{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.hist-titulo{font-size:13px;font-weight:500;color:var(--texto)}
+.hist-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.hist-dir{display:flex;align-items:center;gap:10px}
+.hist-vol{font-size:13px;font-weight:600;color:var(--verde)}
+.hist-chevron{font-size:16px;color:var(--muted);transition:transform .25s}
+.hist-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.hist-card.aberto .hist-chevron{transform:rotate(180deg)}
+.hist-card.aberto .hist-body{max-height:400px}
+.hist-exs{display:flex;flex-direction:column;gap:6px;padding:0 16px 14px}
+.hist-ex{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#0f0f0f;border-radius:8px}
+.hist-ex-dot{width:6px;height:6px;border-radius:50%;background:var(--verde);flex-shrink:0}
 .hist-ex-nome{font-size:12px;color:var(--texto);flex:1}
 .hist-ex-meta{font-size:11px;color:var(--muted)}
 
-/* ── PRS ── */
+/* PRS */
 .pr-card{background:var(--card);border:0.5px solid var(--borda);border-radius:10px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
 .pr-icon{font-size:18px;color:#EF9F27}
 .pr-nome{flex:1;font-size:13px;font-weight:500;color:var(--texto)}
 .pr-carga{font-size:18px;font-weight:600;color:var(--verde)}
 .pr-data{font-size:11px;color:var(--muted)}
 
-/* ── CONQUISTAS ── */
+/* CONQUISTAS */
 .conquista-card{background:var(--card);border:0.5px solid var(--borda);border-radius:10px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;opacity:.4}
 .conquista-card.desbloqueada{opacity:1;border-color:#EF9F27}
 .conquista-icon{font-size:22px;color:#EF9F27}
 .conquista-nome{font-size:13px;font-weight:500;color:var(--texto)}
 .conquista-desc{font-size:11px;color:var(--muted);margin-top:2px}
 
-/* ── NUTRICAO ── */
+/* NUTRICAO */
 .hidratacao-box{background:var(--card);border:0.5px solid var(--borda);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .hidra-titulo{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;color:var(--muted)}
 .hidra-titulo i{color:#38bdf8;font-size:16px}
@@ -201,15 +206,27 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .cal-total{font-size:28px;font-weight:600;color:var(--verde)}
 .cal-sub{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* ── PLANO ALIMENTAR ── */
-.refeicao-card{background:var(--card);border:0.5px solid var(--borda);border-radius:14px;padding:16px;margin-bottom:10px}
-.refeicao-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.refeicao-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.refeicao-icon i{font-size:20px}
+/* PLANO ALIMENTAR */
+.dias-semana-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.dias-semana-nav::-webkit-scrollbar{height:2px}
+.dia-btn{flex-shrink:0;padding:7px 14px;border-radius:8px;border:0.5px solid var(--borda2);background:transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+.dia-btn:hover{border-color:var(--verde);color:var(--verde)}
+.dia-btn.on{background:var(--verde);color:var(--preto);border-color:var(--verde)}
+.plano-tipo{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;padding:4px 0}
+.plano-tipo i{color:var(--verde);font-size:14px}
+.refeicao-card{background:var(--card);border:0.5px solid var(--borda);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.refeicao-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background .15s}
+.refeicao-header:hover{background:rgba(255,255,255,.03)}
+.refeicao-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.refeicao-icon i{font-size:18px}
 .refeicao-titulo{font-size:14px;font-weight:600;color:var(--texto)}
 .refeicao-horario{font-size:11px;color:var(--muted);margin-top:2px}
-.refeicao-kcal{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap}
-.refeicao-itens{display:flex;flex-direction:column;gap:10px}
+.refeicao-kcal{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;margin-right:6px}
+.refeicao-chevron{font-size:16px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+.refeicao-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.refeicao-card.aberto .refeicao-chevron{transform:rotate(180deg)}
+.refeicao-card.aberto .refeicao-body{max-height:600px}
+.refeicao-itens{display:flex;flex-direction:column;gap:10px;padding:0 16px 14px}
 .refeicao-item{background:#0f0f0f;border:0.5px solid var(--borda);border-radius:10px;padding:12px 14px}
 .refeicao-nome{font-size:13px;font-weight:500;color:var(--texto);margin-bottom:6px}
 .refeicao-macro{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
@@ -219,7 +236,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .macro.g{background:#0d1a2a;color:#38bdf8}
 .refeicao-preparo{font-size:12px;color:var(--muted);line-height:1.6}
 
-/* ── INPUTS ── */
+/* INPUTS */
 .campo{width:100%;background:#0d0d0d;border:0.5px solid var(--borda2);border-radius:10px;padding:12px 14px;color:var(--texto);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
 .campo:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(200,255,0,0.08)}
 select.campo option{background:var(--card)}
@@ -227,7 +244,7 @@ select.campo option{background:var(--card)}
 .linha-dupla{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .linha-tripla{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 
-/* ── BOTOES ── */
+/* BOTOES */
 .btn-principal{background:var(--verde);color:var(--preto);border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto;white-space:nowrap;flex-shrink:0;transition:opacity .15s,transform .1s,box-shadow .2s}
 .btn-principal:hover{opacity:.95;transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,255,0,0.15)}
 .btn-principal:active{transform:translateY(0);box-shadow:none}
@@ -235,7 +252,7 @@ select.campo option{background:var(--card)}
 .btn-sec{background:var(--borda);color:var(--texto);border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;transition:background .15s;white-space:nowrap}
 .btn-sec:hover{background:var(--borda2)}
 
-/* ── MODAL ── */
+/* MODAL */
 .modal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center}
 .modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75)}
 .modal-box{position:relative;background:var(--card);border:0.5px solid var(--borda2);border-radius:18px;padding:24px;width:380px;display:flex;flex-direction:column;gap:12px;z-index:1}
@@ -243,23 +260,23 @@ select.campo option{background:var(--card)}
 .modal-header h3{font-size:15px;font-weight:500;color:var(--texto)}
 .modal-header button{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer}
 
-/* ── ULTIMO TREINO ── */
+/* ULTIMO TREINO */
 .ultimo-card{background:#0f0f0f;border:0.5px solid var(--borda);border-radius:12px;padding:14px 16px}
 .ultimo-data{font-size:11px;color:var(--muted);margin-bottom:10px}
 
-/* ── TOAST ── */
+/* TOAST */
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:0.5px solid var(--borda2);color:var(--texto);padding:12px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;z-index:200;pointer-events:none;white-space:nowrap}
 #toast.visivel{opacity:1}
 
-/* ── VAZIO ── */
+/* VAZIO */
 .vazio{text-align:center;color:var(--muted);font-size:13px;padding:32px 0}
 
-/* ── SCROLLBAR ── */
+/* SCROLLBAR */
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--borda2);border-radius:2px}
 
-/* ── RESPONSIVO ── */
+/* RESPONSIVO */
 @media (max-width:768px){
   body{overflow:auto}
   #tela-auth{height:100dvh;align-items:flex-start;padding:24px 0;overflow-y:auto}
@@ -272,12 +289,11 @@ select.campo option{background:var(--card)}
   .auth-brand-icon{width:44px;height:44px;border-radius:12px}
   .auth-brand-icon i{font-size:22px}
   .auth-brand-nome{font-size:20px}
-
   #tela-app{flex-direction:column;height:100dvh}
   .sidebar{width:100%;height:58px;flex-direction:row;padding:0 8px;border-right:none;border-top:0.5px solid var(--borda);order:2;position:fixed;bottom:0;left:0;right:0;z-index:50;background:#090909;gap:0;justify-content:space-around}
   .logo-box{display:none}
   .sidebar-nav{flex-direction:row;gap:0;flex:1;justify-content:space-around;align-items:center}
-  .nb{width:38px;height:38px;font-size:16px}
+  .nb{width:36px;height:36px;font-size:16px}
   .sair-btn{margin-top:0}
   .main{order:1;padding-bottom:58px;overflow:hidden}
   .pagina{height:calc(100dvh - 58px)}
@@ -302,8 +318,8 @@ select.campo option{background:var(--card)}
   .tdee-resultado{grid-template-columns:repeat(2,1fr)}
   .timer-display{font-size:40px}
   .grafico-box{height:160px}
-  .refeicao-header{gap:10px}
-  .refeicao-icon{width:36px;height:36px}
+  .fichas-row{gap:6px}
+  .ficha-btn{width:34px;height:34px;font-size:12px}
 }
 
 @media (max-width:400px){

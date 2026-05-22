@@ -1,17 +1,8 @@
 const API = 'https://nonetgym-production.up.railway.app/api'
 
-// pega o token
-function getToken() {
-  return localStorage.getItem('token')
-}
+function getToken() { return localStorage.getItem('token') }
+function getUsuario() { const u = localStorage.getItem('usuario'); return u ? JSON.parse(u) : null }
 
-// pega usuario logado
-function getUsuario() {
-  const u = localStorage.getItem('usuario')
-  return u ? JSON.parse(u) : null
-}
-
-// toast rapido
 function mostrarToast(msg) {
   const t = document.getElementById('toast')
   t.textContent = msg
@@ -19,19 +10,13 @@ function mostrarToast(msg) {
   setTimeout(() => t.classList.remove('visivel'), 2500)
 }
 
-// data de hoje
-function hoje() {
-  return new Date().toISOString().slice(0, 10)
-}
+function hoje() { return new Date().toISOString().slice(0, 10) }
 
-// formata data bonito
 function formatarData(d) {
-  return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short', year: 'numeric'
-  })
+  if (!d) return ''
+  return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
-// saudacao por horario
 function getSaudacao() {
   const h = new Date().getHours()
   if (h < 12) return 'Bom dia'
@@ -39,7 +24,6 @@ function getSaudacao() {
   return 'Boa noite'
 }
 
-// troca de pagina
 function irPara(pagina, btn) {
   document.querySelectorAll('.pagina').forEach(p => p.style.display = 'none')
   document.getElementById('pagina-' + pagina).style.display = 'flex'
@@ -52,17 +36,14 @@ function irPara(pagina, btn) {
   if (pagina === 'historico') carregarHistorico()
   if (pagina === 'progresso') carregarProgresso()
   if (pagina === 'nutricao') carregarNutricao()
+  if (pagina === 'alimentar') carregarAlimentar()
 }
 
-// chamada pra api
 async function chamarAPI(rota, metodo, dados) {
   try {
     const config = {
       method: metodo || 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getToken()
-      }
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() }
     }
     if (dados) config.body = JSON.stringify(dados)
     const res = await fetch(API + rota, config)
@@ -74,18 +55,17 @@ async function chamarAPI(rota, metodo, dados) {
   }
 }
 
-// abre modais
-function abrirModalExercicio() {
-  document.getElementById('modal-exercicio').style.display = 'flex'
-}
-function abrirModalMedida() {
-  document.getElementById('modal-medida').style.display = 'flex'
-}
-function fecharModal(id) {
-  document.getElementById(id).style.display = 'none'
+function abrirModalExercicio() { document.getElementById('modal-exercicio').style.display = 'flex' }
+function abrirModalMedida() { document.getElementById('modal-medida').style.display = 'flex' }
+function fecharModal(id) { document.getElementById(id).style.display = 'none' }
+
+function selecionarFicha(btn, nome) {
+  document.querySelectorAll('.ficha-btn').forEach(b => b.classList.remove('on'))
+  btn.classList.add('on')
+  document.getElementById('nome-treino').value = nome
+  document.getElementById('ficha-nome-atual').textContent = nome
 }
 
-// sair
 function sair() {
   localStorage.removeItem('token')
   localStorage.removeItem('usuario')
@@ -93,11 +73,8 @@ function sair() {
   document.getElementById('tela-auth').style.display = 'flex'
 }
 
-// verifica sessao ao abrir
 window.onload = function() {
   const token = getToken()
   const usuario = getUsuario()
-  if (token && usuario) {
-    entrarNoApp(usuario)
-  }
+  if (token && usuario) entrarNoApp(usuario)
 }
