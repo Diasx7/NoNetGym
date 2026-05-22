@@ -7,7 +7,6 @@ async function carregarHistorico() {
     return
   }
 
-  // agrupa por data
   const porData = {}
   res.dados.forEach(e => {
     const data = (e.exercise_date || e.date)?.slice(0,10)
@@ -16,16 +15,25 @@ async function carregarHistorico() {
     porData[data].push(e)
   })
 
-  // calcula volume por data
   lista.innerHTML = Object.entries(porData).map(([data, exs]) => {
     const volume = exs.reduce((acc, e) =>
       acc + ((e.sets||0) * (e.reps||0) * (parseFloat(e.weight)||0)), 0)
+    const volStr = volume >= 1000 ? (volume/1000).toFixed(1) + 't' : volume + 'kg'
+
     return `
       <div class="hist-card">
-        <div class="hist-data">${formatarData(data)}</div>
-        <div class="hist-nome">${exs.length} exercício${exs.length > 1 ? 's' : ''}</div>
-        <div class="hist-meta">
-          ${volume > 0 ? (volume >= 1000 ? (volume/1000).toFixed(1) + 't' : volume + 'kg') : '—'}
+        <div class="hist-topo">
+          <div class="hist-data">${formatarData(data)}</div>
+          <div class="hist-volume">${volume > 0 ? volStr : '—'}</div>
+        </div>
+        <div class="hist-exs">
+          ${exs.map(e => `
+            <div class="hist-ex">
+              <div class="hist-ex-dot"></div>
+              <div class="hist-ex-nome">${e.name}</div>
+              <div class="hist-ex-meta">${e.sets}x${e.reps} · ${parseFloat(e.weight).toFixed(0)}kg</div>
+            </div>
+          `).join('')}
         </div>
       </div>`
   }).join('')

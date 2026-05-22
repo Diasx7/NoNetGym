@@ -107,6 +107,7 @@
       <button class="nb" onclick="irPara('historico',this)" title="Histórico"><i class="ti ti-calendar-stats"></i></button>
       <button class="nb" onclick="irPara('progresso',this)" title="Progresso"><i class="ti ti-chart-line"></i></button>
       <button class="nb" onclick="irPara('nutricao',this)" title="Nutrição"><i class="ti ti-salad"></i></button>
+      <button class="nb" onclick="irPara('alimentar',this)" title="Plano Alimentar"><i class="ti ti-apple"></i></button>
     </nav>
     <button class="nb sair-btn" onclick="sair()" title="Sair"><i class="ti ti-logout"></i></button>
   </div>
@@ -255,6 +256,104 @@
         </div>
         <div class="sec-title">Calorias queimadas hoje</div>
         <div id="calorias-queimadas" class="calorias-box"></div>
+      </div>
+    </div>
+
+    <div id="pagina-alimentar" class="pagina" style="display:none">
+      <div class="topbar"><h2>Plano alimentar</h2></div>
+      <div class="content">
+        <div class="refeicao-card">
+          <div class="refeicao-header">
+            <div class="refeicao-icon" style="background:#1a1a00"><i class="ti ti-sun" style="color:#EF9F27"></i></div>
+            <div>
+              <div class="refeicao-titulo">Café da manhã</div>
+              <div class="refeicao-horario">06:00 – 08:00</div>
+            </div>
+            <div class="refeicao-kcal">~500 kcal</div>
+          </div>
+          <div class="refeicao-itens">
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Omelete de claras com aveia</div>
+              <div class="refeicao-macro"><span class="macro p">35g prot</span><span class="macro c">40g carb</span><span class="macro g">8g gord</span></div>
+              <div class="refeicao-preparo">Bata 4 claras com 1 ovo inteiro. Adicione 3 col. sopa de aveia. Cozinhe em frigideira antiaderente por 3 min cada lado.</div>
+            </div>
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Fruta + iogurte grego</div>
+              <div class="refeicao-macro"><span class="macro p">15g prot</span><span class="macro c">25g carb</span><span class="macro g">3g gord</span></div>
+              <div class="refeicao-preparo">200g de iogurte grego natural sem açúcar com 1 banana média fatiada ou 1 maçã.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="refeicao-card">
+          <div class="refeicao-header">
+            <div class="refeicao-icon" style="background:#001a0a"><i class="ti ti-bolt" style="color:#4ade80"></i></div>
+            <div>
+              <div class="refeicao-titulo">Pré-treino</div>
+              <div class="refeicao-horario">60–90 min antes do treino</div>
+            </div>
+            <div class="refeicao-kcal">~400 kcal</div>
+          </div>
+          <div class="refeicao-itens">
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Batata doce com frango grelhado</div>
+              <div class="refeicao-macro"><span class="macro p">40g prot</span><span class="macro c">50g carb</span><span class="macro g">5g gord</span></div>
+              <div class="refeicao-preparo">200g de batata doce cozida amassada. 150g de frango temperado com limão e alho, grelhado em frigideira por 6 min cada lado.</div>
+            </div>
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Banana com pasta de amendoim</div>
+              <div class="refeicao-macro"><span class="macro p">8g prot</span><span class="macro c">30g carb</span><span class="macro g">10g gord</span></div>
+              <div class="refeicao-preparo">1 banana média com 1 col. sopa de pasta de amendoim integral. Opção rápida e prática.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="refeicao-card">
+          <div class="refeicao-header">
+            <div class="refeicao-icon" style="background:#001020"><i class="ti ti-barbell" style="color:#38bdf8"></i></div>
+            <div>
+              <div class="refeicao-titulo">Pós-treino</div>
+              <div class="refeicao-horario">Até 30 min após o treino</div>
+            </div>
+            <div class="refeicao-kcal">~550 kcal</div>
+          </div>
+          <div class="refeicao-itens">
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Whey + carboidrato rápido</div>
+              <div class="refeicao-macro"><span class="macro p">50g prot</span><span class="macro c">60g carb</span><span class="macro g">4g gord</span></div>
+              <div class="refeicao-preparo">1 scoop de whey protein com água ou leite desnatado. Acompanhe com 1 banana ou 200ml de suco de uva integral.</div>
+            </div>
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Arroz branco com carne magra</div>
+              <div class="refeicao-macro"><span class="macro p">45g prot</span><span class="macro c">55g carb</span><span class="macro g">6g gord</span></div>
+              <div class="refeicao-preparo">150g de arroz branco cozido. 180g de patinho ou coxão mole refogado com cebola, alho e tomate.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="refeicao-card">
+          <div class="refeicao-header">
+            <div class="refeicao-icon" style="background:#1a0010"><i class="ti ti-moon" style="color:#c084fc"></i></div>
+            <div>
+              <div class="refeicao-titulo">Jantar</div>
+              <div class="refeicao-horario">19:00 – 21:00</div>
+            </div>
+            <div class="refeicao-kcal">~450 kcal</div>
+          </div>
+          <div class="refeicao-itens">
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Salmão com legumes no vapor</div>
+              <div class="refeicao-macro"><span class="macro p">42g prot</span><span class="macro c">15g carb</span><span class="macro g">18g gord</span></div>
+              <div class="refeicao-preparo">200g de filé de salmão temperado com limão e ervas. Assar a 200°C por 18 min. Acompanhe com brócolis e cenoura no vapor.</div>
+            </div>
+            <div class="refeicao-item">
+              <div class="refeicao-nome">Caseína antes de dormir</div>
+              <div class="refeicao-macro"><span class="macro p">25g prot</span><span class="macro c">10g carb</span><span class="macro g">3g gord</span></div>
+              <div class="refeicao-preparo">200g de cottage ou 1 scoop de caseína com água. Proteína de digestão lenta ideal para recuperação noturna.</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
